@@ -1,0 +1,10 @@
+[theme]
+base="light"
+primaryColor="#30a7bf"
+secondaryBackgroundColor="#e0fbff"
+
+[client]
+toolbarMode = "viewer"
+
+[server]
+runOnSave = true  
