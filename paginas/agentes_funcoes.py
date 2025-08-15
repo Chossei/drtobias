@@ -9,8 +9,17 @@ from firebase_admin import firestore, credentials, storage
 
 # Função para ler os exames e extrair informações mais importantes
 
-
 def relator(pet_id, exame_doc_id, pdf):
+    
+    """
+    Estrutura as informações obrigatórias e opcionais do exame:
+    data, tipo, resultado e mini-relatório (opcional)
+
+    Args:
+        - pet_id: id do respectivo pet
+        - exame_doc_id: id do documento do respectivo exame
+        - pdf: arquivo pdf presente na memória do streamlit
+    """
 
 
     # Extraindo o texto dos pdfs
