@@ -44,7 +44,7 @@ def editar_pet_dialog():
             sexo_pet = st.selectbox("Sexo *", 
                                   options=["Macho", "Fêmea"], 
                                   index=["Macho", "Fêmea"].index(pet['sexo']) if pet['sexo'] in ["Macho", "Fêmea"] else 0)
-            idade_pet = st.number_input("Idade (anos) *", min_value=0, max_value=30, step=1, value=int(pet['idade']))
+            nascimento_pet = st.date_input("Data de nascimento do pet *", value=None, max_value=date.today(), format = "DD/MM/YYYY")
             castrado_pet = st.selectbox("Pet castrado? *", 
                                       options=["Sim", "Não", "Não sei"],
                                       index=["Sim", "Não", "Não sei"].index(pet['castrado']) if pet['castrado'] in ["Sim", "Não", "Não sei"] else 0)
@@ -95,7 +95,9 @@ def editar_pet_dialog():
                         else:
                             st.error("❌ Erro ao fazer upload da foto. Mantendo foto anterior...")
                     
-                    # Atualiza o pet
+                    # Atualiza o pet e calcula a idade
+                    idade_pet = calcular_idade(nascimento_pet)
+
                     if editar_pet(
                         pet_id=pet['id'],
                         nome=nome_pet,
@@ -205,7 +207,7 @@ with st.form("cadastro_pet", clear_on_submit=True):
     
     with col2:
         sexo_pet = st.selectbox("Sexo *", options=["Macho", "Fêmea"], index=None, placeholder="Selecione o sexo")
-        idade_pet = st.number_input("Idade (anos) *", min_value=0, max_value=30, step=1)
+        nascimento_pet = st.date_input("Data de nascimento do pet *", value=None, max_value=date.today(), format = "DD/MM/YYYY")
         castrado_pet = st.selectbox("Pet castrado? *", options=["Sim", "Não", "Não sei"], index=None, placeholder="Selecione uma opção")
         altura_pet = st.number_input("Altura (em cm)", min_value=0, max_value=300, step=1)
         saude_pet = st.text_area(
@@ -241,6 +243,8 @@ with st.form("cadastro_pet", clear_on_submit=True):
         if not nome_pet or not raca_pet or not sexo_pet or not especie_pet or not castrado_pet:
             st.error("Por favor, preencha todos os campos obrigatórios: **Nome**, **Espécie**, **Raça**, **Sexo** e **Castração**!")
         else:
+            # Calcula a idade
+            idade_pet = calcular_idade(nascimento_pet)
             with st.spinner("Cadastrando seu pet... 🐾"):
                 # Primeiro salva o pet sem foto para obter o ID
                 pet_id = salvar_pet(

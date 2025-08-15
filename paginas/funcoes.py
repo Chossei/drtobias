@@ -1,4 +1,5 @@
-from datetime import datetime
+from datetime import date, datetime
+from dateutil.relativedelta import relativedelta
 import streamlit as st
 from firebase_admin import firestore, credentials, storage
 import firebase_admin
@@ -363,6 +364,55 @@ def atualizar_chat(chat_id, mensagens):
 # ============================================================================
 # FUNÇÕES PARA GERENCIAMENTO DE PETS
 # ============================================================================
+
+def calcular_idade(nascimento):
+    """
+    Calcula a idade a partir de uma data de nascimento e retorna uma string formatada.
+    
+    Exemplos de retorno:
+    - "2 anos, 5 meses e 10 dias"
+    - "3 anos e 15 dias" (se meses for 0)
+    - "8 meses e 5 dias" (se anos for 0)
+    - "1 ano" (se meses e dias forem 0)
+    - "Recém-nascido" (se a data for hoje)
+    """
+    hoje = date.today()
+    
+    # 1. Calcula a diferença precisa entre as datas
+    diferenca = relativedelta(hoje, nascimento)
+    
+    anos = diferenca.years
+    meses = diferenca.months
+    dias = diferenca.days
+    
+    # 2. Cria uma lista para armazenar as partes da string que não são zero
+    partes_idade = []
+    
+    # Adiciona a parte dos anos se for maior que zero
+    if anos > 0:
+        texto_anos = f"{anos} ano" if anos == 1 else f"{anos} anos"
+        partes_idade.append(texto_anos)
+        
+    # Adiciona a parte dos meses se for maior que zero
+    if meses > 0:
+        texto_meses = f"{meses} mês" if meses == 1 else f"{meses} meses"
+        partes_idade.append(texto_meses)
+        
+    # Adiciona a parte dos dias se for maior que zero
+    if dias > 0:
+        texto_dias = f"{dias} dia" if dias == 1 else f"{dias} dias"
+        partes_idade.append(texto_dias)
+        
+    # 3. Monta a string final de forma inteligente
+    if not partes_idade:
+        return "Recém-nascido"
+    elif len(partes_idade) == 1:
+        return partes_idade[0]
+    elif len(partes_idade) == 2:
+        return " e ".join(partes_idade)
+    else: # len(partes_idade) == 3
+        # Junta os dois primeiros com ", " e o último com " e "
+        return ", ".join(partes_idade[:-1]) + " e " + partes_idade[-1]
 
 def fazer_upload_imagem_pet(imagem_file, pet_id, pet_nome):
     """
