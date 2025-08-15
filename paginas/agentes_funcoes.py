@@ -1,7 +1,9 @@
 import streamlit as st
 import json
 import firebase_admin
+import PyPDF2
 from openai import OpenAI 
+from paginas.funcoes import COLECAO_USUARIOS
 from firebase_admin import firestore, credentials, storage
 
 
@@ -10,8 +12,22 @@ from firebase_admin import firestore, credentials, storage
 
 def relator(pet_id, exame_doc_id, pdf):
 
+
+    # Extraindo o texto dos pdfs
+    texto = ""
+    try:
+        leitor = PyPDF2.PdfReader(pdf)
+        for pagina in leitor.pages:
+            texto_pagina = pagina.extract_text()
+            if texto_pagina:
+                texto += texto_pagina
+    except Exception as erro:
+        print(f"Erro ao extrair o texto do pdf: {erro}")
+        return None
+
+    # Definindo o prompt para o agente
     prompt = """Você é um agente de IA especializado em leitura e interpretação de exames
-    veterinários. Você receberá como entrada um arquivo pdf contendo o exame de um animal de estimação. Sua tarefa é identificar informações relevantes
+    veterinários. Você receberá como entrada a extração de texto um arquivo pdf contendo o exame de um animal de estimação. Sua tarefa é identificar informações relevantes
     a respeito da saúde do animal. As informações obrigatórias incluem: a data em que o exame foi realizado, o nome ou descrição do exame
     realizado e a conclusão ou indicativo da condição de saúde do pet. Além disso, caso hajam informações suficientes,
     elabore um mini-relatório, contendo um breve resumo com informações adicionais que possam ser revelantes para a saúde do pet.
@@ -69,36 +85,54 @@ def relator(pet_id, exame_doc_id, pdf):
     # Criando o modelo
     openai_api_key = st.secrets['OPENAI_API_KEY']
     client = OpenAI(api_key=openai_api_key)
+
+    # Definindo o esquema para o output estruturado
+
+    esquema = {
+        "schema": {
+            "type": "object",
+            "properties": {
+                "data_exame":{
+                    "type": "string",
+                    "description": "Data em que o exame do pet foi realizado, em formato DD-MM-AAAA",
+                    "items":{"type":"string"}
+                },
+                "tipo_exame":{
+                    "type": "string",
+                    "description": "Nome ou descrição do exame do pet",
+                    "items":{"type":"string"}
+                },
+                "resultado_exame":{
+                    "type": "string",
+                    "description": "Conclusão ou indicativo da saúde do pet",
+                    "items":{"type":"string"}
+                },
+                "mini_relatorio":{
+                    "type": "string",
+                    "description": "Breve resumo com informações adicionais que possam ser revelantes para a saúde do pet",
+                    "items":{"type":"string"}
+                },
+            },
+            "required": ["data_exame", "tipo_exame", "resultado_exame", "mini_relatorio"],
+            "additionalProperties": False
+        },
+        "strict": True
+    }
     
-    # Abre o pdf a partir do caminho
-    with open(f'{pdf}', 'rb') as arquivo_pdf:
-        resposta = client.chat.completions.create(
-            model = 'gpt-4o-mini',
+    # Definindo o modelo com os respectivos argumentos
+    resposta = client.chat.completions.create(
+        model = 'gpt-4o-mini',
 
-            # Direciona o agente com as instruções
-            messages = [{'role': 'system', 'content' : prompt}],
-            
-            # O pdf selecionado é lido pela IA e transformado em texto
-            files = [{'name': f'{pdf}', 'content': arquivo_pdf}],
-
-            # Garante o formato JSON ao final 
-            response_format={'type': 'json_object'}
+        # Direciona o agente com as instruções
+        messages = [{'role': 'system', 'content' : prompt},
+                    {'role': 'user', 'content': texto}],
+    
+        # Garante o formato JSON ao final 
+        response_format={'type': 'json_schema', 'json_schema': esquema}
         )
 
     # Saída em formato de texto, objetivando JSON
-    saida = resposta.choices[0].message.content
-
-    # Tenta extrair a parte JSON da resposta (evitar erros da IA)
-    dados_json = None
-    try:
-        start = saida.find('{')
-        end = saida.rfind('}')
-        if start != -1 and end != -1 and end > start:
-            json_str = saida[start:end+1]
-            dados_json = json.loads(json_str)
-    except Exception as e:
-        print(f'Erro na chamada da API OpenAI ou na análise do JSON: {e}')
-        return None
+    saida = json.loads(resposta.choices[0].message.content)
 
     db = firestore.client()
     exames_doc = db.collection(COLECAO_USUARIOS).document(st.user.email).collection("pets").document(pet_id).collection("exames").document(exame_doc_id)
