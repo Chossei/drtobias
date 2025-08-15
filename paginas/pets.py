@@ -194,6 +194,8 @@ with st.form("cadastro_pet", clear_on_submit=True):
             "Cachorro", "Gato", "Pássaro", "Coelho", "Hamster", "Peixe", "Réptil", "Outro"
         ], index=None, placeholder="Selecione a espécie")
         raca_pet = st.text_input("Raça *", placeholder="Ex: Golden Retriever, SRD, Persa...")
+        peso_pet = st.number_input("Peso (em kg)", placeholder="Ex: 2.54", min_value = 0, max_value=100,
+        step = 0.1)
         historia_pet = st.text_area(
             "História do Pet",
             placeholder="Conte a história do seu pet: como chegou até você, personalidade, comportamentos especiais...",
@@ -205,6 +207,7 @@ with st.form("cadastro_pet", clear_on_submit=True):
         sexo_pet = st.selectbox("Sexo *", options=["Macho", "Fêmea"], index=None, placeholder="Selecione o sexo")
         idade_pet = st.number_input("Idade (anos) *", min_value=0, max_value=30, step=1)
         castrado_pet = st.selectbox("Pet castrado? *", options=["Sim", "Não", "Não sei"], index=None, placeholder="Selecione uma opção")
+        altura_pet = st.number_input("Altura (em cm)", min_value=0, max_value=300, step=1)
         saude_pet = st.text_area(
             "Saúde Geral do Pet",
             placeholder="Descreva o estado de saúde: doenças, cirurgias anteriores, medicamentos, consultas veterinárias...",
@@ -247,6 +250,8 @@ with st.form("cadastro_pet", clear_on_submit=True):
                     raca=raca_pet,
                     sexo=sexo_pet,
                     castrado=castrado_pet,
+                    peso=peso_pet,
+                    altura=altura_pet,
                     historia=historia_pet,
                     saude=saude_pet,
                     alimentacao=alimentacao_pet,
@@ -272,6 +277,8 @@ with st.form("cadastro_pet", clear_on_submit=True):
                             especie=especie_pet,
                             idade=idade_pet,
                             raca=raca_pet,
+                            peso=peso_pet,
+                            altura=altura_pet,
                             sexo=sexo_pet,
                             castrado=castrado_pet,
                             historia=historia_pet,

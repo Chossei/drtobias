@@ -509,7 +509,7 @@ def obter_pets():
                 
                 # Informações detalhadas
                 "peso": pet_data.get("peso", ""),
-                "altura": pet_data.get("altura", "")
+                "altura": pet_data.get("altura", ""),
                 "historia": pet_data.get("historia", ""),
                 "saude": pet_data.get("saude", ""),
                 "alimentacao": pet_data.get("alimentacao", ""),
