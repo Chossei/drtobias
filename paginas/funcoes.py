@@ -420,7 +420,8 @@ def fazer_upload_imagem_pet(imagem_file, pet_id, pet_nome):
         print(f"Traceback completo: {traceback.format_exc()}")
         return None
 
-def salvar_pet(nome, especie, idade, raca, sexo, castrado, historia, saude, alimentacao, url_foto):
+def salvar_pet(nome, especie, idade, raca, sexo, castrado,
+peso, altura, historia, saude, alimentacao, url_foto):
     """
     Salva um pet no Firestore com todas as informações detalhadas.
     
@@ -430,6 +431,8 @@ def salvar_pet(nome, especie, idade, raca, sexo, castrado, historia, saude, alim
         idade: Idade do pet
         raca: Raça do pet
         sexo: Sexo do pet (Macho/Fêmea)
+        peso: Peso do pet (em kg)
+        altura: Altura do pet (em cm)
         castrado: Status de castração do pet (Sim/Não/Não sei)
         historia: História do pet
         saude: Informações de saúde do pet
@@ -457,6 +460,8 @@ def salvar_pet(nome, especie, idade, raca, sexo, castrado, historia, saude, alim
             "url_foto": url_foto,
             
             # Informações detalhadas
+            "peso": peso or "",
+            "altura": altura or "",
             "historia": historia or "",
             "saude": saude or "",
             "alimentacao": alimentacao or "",
@@ -503,6 +508,8 @@ def obter_pets():
                 "url_foto": pet_data.get("url_foto", ""),
                 
                 # Informações detalhadas
+                "peso": pet_data.get("peso", ""),
+                "altura": pet_data.get("altura", "")
                 "historia": pet_data.get("historia", ""),
                 "saude": pet_data.get("saude", ""),
                 "alimentacao": pet_data.get("alimentacao", ""),
@@ -516,7 +523,8 @@ def obter_pets():
         print(f"Erro ao obter pets: {e}")
         return []
 
-def editar_pet(pet_id, nome, especie, idade, raca, sexo, castrado, historia, saude, alimentacao, url_foto):
+def editar_pet(pet_id, nome, especie, idade, raca, sexo, castrado,
+peso, altura, historia, saude, alimentacao, url_foto):
     """
     Edita/atualiza as informações de um pet existente.
     
@@ -528,6 +536,8 @@ def editar_pet(pet_id, nome, especie, idade, raca, sexo, castrado, historia, sau
         raca: Raça do pet
         sexo: Sexo do pet (Macho/Fêmea)
         castrado: Status de castração do pet (Sim/Não/Não sei)
+        peso: Peso do pet (em kg)
+        altura: Altura do pet (em cm)
         historia: História do pet
         saude: Informações de saúde do pet
         alimentacao: Informações sobre alimentação
@@ -554,6 +564,8 @@ def editar_pet(pet_id, nome, especie, idade, raca, sexo, castrado, historia, sau
             "url_foto": url_foto,
             
             # Informações detalhadas
+            "peso": peso or "",
+            "altura": altura or "",
             "historia": historia or "",
             "saude": saude or "",
             "alimentacao": alimentacao or "",
