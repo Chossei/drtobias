@@ -473,8 +473,7 @@ def fazer_upload_imagem_pet(imagem_file, pet_id, pet_nome):
         print(f"Traceback completo: {traceback.format_exc()}")
         return None
 
-def salvar_pet(nome, especie, idade, raca, sexo, castrado,
-peso, altura, historia, saude, alimentacao, url_foto):
+def salvar_pet(nome, especie, idade, raca, sexo, castrado, peso, altura, historia, saude, alimentacao, url_foto):
     """
     Salva um pet no Firestore com todas as informações detalhadas.
     
@@ -576,8 +575,7 @@ def obter_pets():
         print(f"Erro ao obter pets: {e}")
         return []
 
-def editar_pet(pet_id, nome, especie, idade, raca, sexo, castrado,
-peso, altura, historia, saude, alimentacao, url_foto):
+def editar_pet(pet_id, nome, especie, idade, raca, sexo, castrado, peso, altura, historia, saude, alimentacao, url_foto):
     """
     Edita/atualiza as informações de um pet existente.
     
@@ -634,33 +632,44 @@ peso, altura, historia, saude, alimentacao, url_foto):
         print(f"Erro ao editar pet {pet_id}: {e}")
         return False
 
-def resumo_pets(pets):
+def atualizar_resumo_pets(pets):
     """
     Cria um resumo de informações para ser utilizada pelo Chatbot
 
     Args:
         pets - lista de dicionários com informações de pets de usuário
     """
+    
+    if not pets:
+        texto_final = "O usuário ainda não tem pets cadastrados."
+
     resumos = []
     for info in pets:
-        texto = f"""
-Pet:{info.get("nome")},
-Espécie: {info.get("especie")},
-Idade: {info.get("idade")},
-Raça: {info.get("raca")},
-Sexo: {info.get("sexo")},
-Castração: {info.get("castrado")},
-Peso: {info.get("peso")},
-Altura: {info.get("altura")},
-História: {info.get("historia")},
-Histórico de saúde: {info.get("saude")},
-Histórico de alimentação: {info.get("alimentacao")}
----
-
-"""
+        texto = f"""- Pet:{info.get("nome")},
+- Espécie:{info.get("especie")},
+- Idade:{info.get("idade")},
+- Raça:{info.get("raca")},
+- Sexo:{info.get("sexo")},
+- Castração:{info.get("castrado")},
+- Peso:{info.get("peso")},
+- Altura:{info.get("altura")},
+- História:{info.get("historia")},
+- Histórico de saúde:{info.get("saude")},
+- Histórico de alimentação:{info.get("alimentacao")}"""
         resumos.append(texto)
+    
+    texto_final = "\n---\n".join(resumos)
 
-    return resumos
+    # Conectando à base de dados e guardando a informação
+    db = firestore.client()
+    pets_ref = db.collection(COLECAO_USUARIOS).document(st.user.email)
+
+    try:
+      pets_ref.update({"resumos_pet": texto_final})
+
+    except Exception as e:
+        print(f"Erro ao salvar o resumo no perfil: {e}")
+        return None
 
 def excluir_pet(pet_id):
     """

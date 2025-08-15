@@ -4,7 +4,9 @@ from paginas.funcoes import (
     obter_pets,
     editar_pet,
     excluir_pet,
-    registrar_acao_usuario
+    registrar_acao_usuario,
+    calcular_idade,
+    atualizar_resumo_pets
 )
 
 # ============================================================================
@@ -114,19 +116,22 @@ def editar_pet_dialog():
                         st.success(f"🎉 Pet **{nome_pet}** atualizado com sucesso!")
                         registrar_acao_usuario("Editar Pet", f"Usuário editou o pet {nome_pet}")
                         st.session_state.pet_editando = None
+
                         st.rerun()
                     else:
                         st.error("Erro ao atualizar o pet. Tente novamente!")
-
-# Mostrar diálogo se há pet sendo editado
-if st.session_state.pet_editando:
-    editar_pet_dialog()
 
 # ============================================================================
 # VISUALIZAÇÃO DOS PETS EXISTENTES
 # ============================================================================
 
 pets = obter_pets()
+
+# Mostrar diálogo se há pet sendo editado
+if st.session_state.pet_editando:
+    editar_pet_dialog()
+    # Atualizando o resumo de informações dos pets para ser utilizado pelo chatbot
+    atualizar_resumo_pets(pets)
 
 if pets:
     st.subheader("🏠 Meus Pets")
@@ -172,6 +177,7 @@ if pets:
                                     if excluir_pet(pet['id']):
                                         st.success(f"Pet {pet['nome']} excluído com sucesso!")
                                         registrar_acao_usuario("Excluir Pet", f"Usuário excluiu o pet {pet['nome']}")
+                                        atualizar_resumo_pets(pets)
                                         st.rerun()
                                     else:
                                         st.error("Erro ao excluir pet!")
@@ -261,6 +267,8 @@ with st.form("cadastro_pet", clear_on_submit=True):
                     alimentacao=alimentacao_pet,
                     url_foto=None  # Inicialmente sem foto
                 )
+                # Atualizando o resumo de informações dos pets para ser utilizado pelo chatbot
+                atualizar_resumo_pets(pets)
                 
                 # Se o pet foi salvo e há uma foto, faz o upload
                 if pet_id and foto_pet is not None:

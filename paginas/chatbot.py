@@ -92,7 +92,8 @@ INFORMAÇÕES DO USUÁRIO:
 - Tipos de Pets: {perfil.get('tipos_pets', 'Não informado')}
 - Situação Atual: {perfil.get('situacao_atual', 'Não informada')}
 
-
+INFORMAÇÕES DOS PETS:
+{perfil.get('resumos_pet', 'Resumo ainda não informado')}
 
 ## 2. Missão
 
