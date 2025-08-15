@@ -1,4 +1,5 @@
 import streamlit as st
+from datetime import date
 from paginas.funcoes import (
     salvar_pet, 
     obter_pets,
@@ -116,7 +117,7 @@ def editar_pet_dialog():
                         st.success(f"🎉 Pet **{nome_pet}** atualizado com sucesso!")
                         registrar_acao_usuario("Editar Pet", f"Usuário editou o pet {nome_pet}")
                         st.session_state.pet_editando = None
-
+                        atualizar_resumo_pets(obter_pets())
                         st.rerun()
                     else:
                         st.error("Erro ao atualizar o pet. Tente novamente!")
@@ -130,8 +131,6 @@ pets = obter_pets()
 # Mostrar diálogo se há pet sendo editado
 if st.session_state.pet_editando:
     editar_pet_dialog()
-    # Atualizando o resumo de informações dos pets para ser utilizado pelo chatbot
-    atualizar_resumo_pets(pets)
 
 if pets:
     st.subheader("🏠 Meus Pets")
@@ -177,7 +176,7 @@ if pets:
                                     if excluir_pet(pet['id']):
                                         st.success(f"Pet {pet['nome']} excluído com sucesso!")
                                         registrar_acao_usuario("Excluir Pet", f"Usuário excluiu o pet {pet['nome']}")
-                                        atualizar_resumo_pets(pets)
+                                        atualizar_resumo_pets(obter_pets())
                                         st.rerun()
                                     else:
                                         st.error("Erro ao excluir pet!")
@@ -267,8 +266,6 @@ with st.form("cadastro_pet", clear_on_submit=True):
                     alimentacao=alimentacao_pet,
                     url_foto=None  # Inicialmente sem foto
                 )
-                # Atualizando o resumo de informações dos pets para ser utilizado pelo chatbot
-                atualizar_resumo_pets(pets)
                 
                 # Se o pet foi salvo e há uma foto, faz o upload
                 if pet_id and foto_pet is not None:
@@ -303,6 +300,7 @@ with st.form("cadastro_pet", clear_on_submit=True):
                     st.success(f"🎉 Pet **{nome_pet}** cadastrado com sucesso!")
                     st.balloons()
                     registrar_acao_usuario("Cadastrar Pet", f"Usuário cadastrou o pet {nome_pet} ({especie_pet}, {sexo_pet}, {raca_pet})")
+                    atualizar_resumo_pets(obter_pets())
                     st.rerun()
                 else:
                     st.error("Erro ao cadastrar o pet. Tente novamente!")
