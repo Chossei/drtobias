@@ -375,6 +375,9 @@ def calcular_idade(nascimento):
     - "8 meses e 5 dias" (se anos for 0)
     - "1 ano" (se meses e dias forem 0)
     - "Recém-nascido" (se a data for hoje)
+
+    Args:
+        nascimento - data de nascimento ou adoção do pet
     """
     hoje = date.today()
     
@@ -630,6 +633,34 @@ peso, altura, historia, saude, alimentacao, url_foto):
     except Exception as e:
         print(f"Erro ao editar pet {pet_id}: {e}")
         return False
+
+def resumo_pets(pets):
+    """
+    Cria um resumo de informações para ser utilizada pelo Chatbot
+
+    Args:
+        pets - lista de dicionários com informações de pets de usuário
+    """
+    resumos = []
+    for info in pets:
+        texto = f"""
+Pet:{info.get("nome")},
+Espécie: {info.get("especie")},
+Idade: {info.get("idade")},
+Raça: {info.get("raca")},
+Sexo: {info.get("sexo")},
+Castração: {info.get("castrado")},
+Peso: {info.get("peso")},
+Altura: {info.get("altura")},
+História: {info.get("historia")},
+Histórico de saúde: {info.get("saude")},
+Histórico de alimentação: {info.get("alimentacao")}
+---
+
+"""
+        resumos.append(texto)
+
+    return resumos
 
 def excluir_pet(pet_id):
     """

@@ -44,7 +44,7 @@ def editar_pet_dialog():
             sexo_pet = st.selectbox("Sexo *", 
                                   options=["Macho", "Fêmea"], 
                                   index=["Macho", "Fêmea"].index(pet['sexo']) if pet['sexo'] in ["Macho", "Fêmea"] else 0)
-            nascimento_pet = st.date_input("Data de nascimento do pet *", value=None, max_value=date.today(), format = "DD/MM/YYYY")
+            nascimento_pet = st.date_input("Data de nascimento (ou adoção) *", value=None, max_value=date.today(), format = "DD/MM/YYYY")
             castrado_pet = st.selectbox("Pet castrado? *", 
                                       options=["Sim", "Não", "Não sei"],
                                       index=["Sim", "Não", "Não sei"].index(pet['castrado']) if pet['castrado'] in ["Sim", "Não", "Não sei"] else 0)
@@ -207,7 +207,7 @@ with st.form("cadastro_pet", clear_on_submit=True):
     
     with col2:
         sexo_pet = st.selectbox("Sexo *", options=["Macho", "Fêmea"], index=None, placeholder="Selecione o sexo")
-        nascimento_pet = st.date_input("Data de nascimento do pet *", value=None, max_value=date.today(), format = "DD/MM/YYYY")
+        nascimento_pet = st.date_input("Data de nascimento (ou adoção) *", value=None, max_value=date.today(), format = "DD/MM/YYYY")
         castrado_pet = st.selectbox("Pet castrado? *", options=["Sim", "Não", "Não sei"], index=None, placeholder="Selecione uma opção")
         altura_pet = st.number_input("Altura (em cm)", min_value=0, max_value=300, step=1)
         saude_pet = st.text_area(
