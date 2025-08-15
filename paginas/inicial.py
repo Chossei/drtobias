@@ -8,6 +8,9 @@ from paginas.funcoes import (
     salvar_exame_pet,
     obter_exames_pet
 )
+from paginas.agentes_funcoes import (
+    relator
+)
 
 st.title("🏠 Dr. Tobias - Página Inicial")
 st.markdown("*Bem-vindo ao seu assistente veterinário especializado! Aqui você pode acompanhar seus pets e acessar todas as funcionalidades.*")
@@ -53,6 +56,11 @@ def dialog_adicionar_exame(pet_id, pet_nome):
                             if exame_id:
                                 st.success(f"✅ Exame '{nome_exame}' adicionado com sucesso!")
                                 registrar_acao_usuario("Adicionar Exame", f"Usuário adicionou exame '{nome_exame}' para o pet {pet_nome}")
+                                
+                                # Encaminha as informações gerais do exame, tratadas pela IA, para o banco de dados
+                                relator(pet_id = pet_id, exame_doc_id = exame_id, pdf = arquivo_pdf)
+                                st.success(f"✅ Ótimo! Nosso assistente digital já estudou o exame de {pet_nome} e está pronto para conversar sobre os resultados.")
+
                                 st.balloons()
                                 
                                 # Pausa antes de fechar o diálogo
