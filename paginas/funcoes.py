@@ -640,8 +640,20 @@ def atualizar_resumo_pets(pets):
         pets - lista de dicionários com informações de pets de usuário
     """
     
+    if not hasattr(st.user, 'email'):
+        return
+
+    # Se não houver pets, salva mensagem e retorna
     if not pets:
         texto_final = "O usuário ainda não tem pets cadastrados."
+        # Conectando à base de dados e guardando a informação
+        db = firestore.client()
+        perfil_ref = db.collection(COLECAO_USUARIOS).document(st.user.email)
+        try:
+            perfil_ref.update({"resumos_pet": texto_final})
+        except Exception as e:
+            print(f"Erro ao salvar o resumo no perfil: {e}")
+        return
 
     resumos = []
     for info in pets:
@@ -662,11 +674,10 @@ def atualizar_resumo_pets(pets):
 
     # Conectando à base de dados e guardando a informação
     db = firestore.client()
-    pets_ref = db.collection(COLECAO_USUARIOS).document(st.user.email)
+    perfil_ref = db.collection(COLECAO_USUARIOS).document(st.user.email)
 
     try:
-      pets_ref.update({"resumos_pet": texto_final})
-
+        perfil_ref.update({"resumos_pet": texto_final})
     except Exception as e:
         print(f"Erro ao salvar o resumo no perfil: {e}")
         return None
