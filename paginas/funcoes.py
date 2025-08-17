@@ -1278,3 +1278,58 @@ def obter_exames_pet(pet_id):
         print(f"Erro ao obter exames do pet {pet_id}: {e}")
         return []
 
+def obter_info_exames(pets):
+    """
+    Obtém todos os resumos, feitos pelo agente de IA, dos exames dos pets do usuário
+    e formata tudo em uma única string de contexto.
+    
+    Args:
+        pets: lista de dicionários de pets (cada um contendo pelo menos 'id' e 'nome')
+        
+    Returns:
+        str: Uma string formatada com os dados dos exames de todos os pets.
+    """
+    # SUGESTÃO 1: Retornar string vazia para consistência.
+    if not hasattr(st.user, 'email'):
+        return ""
+        
+    db = firestore.client()
+    texto = ""
+
+    for pet in pets:
+        # O try deve englobar toda a operação que depende do banco de dados
+        try:
+            exames_ref = db.collection(COLECAO_USUARIOS).document(st.user.email).collection("pets").document(pet['id']).collection("exames")
+            
+            docs = exames_ref.order_by("data_exame", direction=firestore.Query.DESCENDING).get()
+            resumos = []
+            
+            for doc in docs:
+                exame_data = doc.to_dict()
+                exame_dict = {
+                    "tipo_exame": exame_data.get("tipo_exame", "Não informado"),
+                    "data_exame": exame_data.get("data_exame", "Não informada"),
+                    # SUGESTÃO 2: Adicionar valores padrão para evitar o "None" no texto.
+                    "resultado_exame": exame_data.get("resultado_exame", "Não informado"),
+                    "mini_relatorio": exame_data.get("mini_relatorio", "Nenhum resumo disponível.")
+                }
+                resumos.append(exame_dict)
+
+            # CORREÇÃO PRINCIPAL: Este bloco foi movido para DENTRO do 'try'.
+            texto += f"Resumo dos exames de {pet['nome']}:\n"
+
+            if resumos:
+                for exame in resumos:
+                    # Usar f-string com aspas triplas para múltiplas linhas é uma ótima ideia!
+                    texto += f"""  - Tipo do exame: {exame['tipo_exame']}
+  - Data do exame: {exame['data_exame']}
+  - Resultado/Indicativo: {exame['resultado_exame']}
+  - Relatório breve: {exame['mini_relatorio']}\n---\n""" # Adicionei uma quebra de linha extra para separar melhor os exames
+            else:
+                texto += f"  Nenhum exame encontrado para {pet['nome']}\n\n"
+    
+        except Exception as e:
+            print(f"Erro ao obter os resumos de exames do pet {pet.get('nome', 'ID desconhecido')}: {e}")
+            texto += f"  Não foi possível obter os exames de {pet.get('nome', 'ID desconhecido')}.\n\n"
+    
+    return texto
