@@ -9,7 +9,9 @@ from paginas.funcoes import (
     obter_chat, 
     excluir_chat,
     atualizar_chat,
-    login_usuario
+    login_usuario,
+    obter_pets,
+    obter_info_exames
 )
 from paginas.llms import gerar_titulo_chat
 from datetime import datetime
@@ -79,6 +81,10 @@ avatar_assistant = 'arquivos/avatar_assistente.jpg'
 
 MENSAGEM_INICIAL = obter_mensagem_inicial()
 
+# Gera o resumo de informações de exames de cada pet
+pets = obter_pets()
+contexto_exames = obter_info_exames(pets)
+
 def obter_system_prompt(perfil):
     """Gera o system prompt personalizado para Dr. Tobias"""
     return f"""
@@ -94,6 +100,9 @@ INFORMAÇÕES DO USUÁRIO:
 
 INFORMAÇÕES DOS PETS:
 {perfil.get('resumos_pet', 'Resumo ainda não informado')}
+
+INFORMAÇÕES DOS EXAMES DE CADA PET:
+{contexto_exames}
 
 ## 2. Missão
 
