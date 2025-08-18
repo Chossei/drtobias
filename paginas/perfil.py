@@ -27,7 +27,7 @@ if perfil:
     
     with col1:
         st.metric("📧 Email", perfil.get("email", "Não informado"))
-        st.metric("🎂 Idade", f"{perfil.get('idade', 'Não informada')} anos" if perfil.get('idade') else "Não informada")
+        st.metric("🎂 Idade", f"{perfil.get('idade', 'Não informada')}" if perfil.get('idade') else "Não informada")
         
         # Tipos de Pets
         tipos_pets_str = ", ".join(perfil.get("tipos_pets", ["Nenhum informado"]))

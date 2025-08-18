@@ -154,7 +154,7 @@ if len(pets) > 0:
                     
                     # Informações básicas essenciais
                     st.markdown(f"**{pet['especie']}** • **{pet['raca']}**")
-                    st.markdown(f"**{pet['sexo']}** • **{pet['idade']} anos**")
+                    st.markdown(f"**{pet['sexo']}** • **{pet['idade']}**")
                     
                     # Contador de exames
                     exames_count = len(obter_exames_pet(pet['id']))

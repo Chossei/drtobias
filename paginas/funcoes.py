@@ -553,7 +553,7 @@ def obter_pets():
                 # Informações básicas
                 "nome": pet_data.get("nome", "Pet sem nome"),
                 "especie": pet_data.get("especie", "Não informada"),
-                "idade": pet_data.get("idade", 0),
+                "idade": pet_data.get("idade", "Não informado"),
                 "raca": pet_data.get("raca", "Não informada"),
                 "sexo": pet_data.get("sexo", "Não informado"),
                 "castrado": pet_data.get("castrado", "Não sei"),
@@ -643,22 +643,23 @@ def atualizar_resumo_pets(pets):
     if not pets:
         texto_final = "O usuário ainda não tem pets cadastrados."
 
-    resumos = []
-    for info in pets:
-        texto = f"""- Pet:{info.get("nome")},
-- Espécie:{info.get("especie")},
-- Idade:{info.get("idade")},
-- Raça:{info.get("raca")},
-- Sexo:{info.get("sexo")},
-- Castração:{info.get("castrado")},
-- Peso:{info.get("peso")},
-- Altura:{info.get("altura")},
-- História:{info.get("historia")},
-- Histórico de saúde:{info.get("saude")},
-- Histórico de alimentação:{info.get("alimentacao")}"""
-        resumos.append(texto)
-    
-    texto_final = "\n---\n".join(resumos)
+    else:
+        resumos = []
+        for info in pets:
+            texto = f"""- Pet:{info.get("nome")},
+    - Espécie:{info.get("especie")},
+    - Idade:{info.get("idade")},
+    - Raça:{info.get("raca")},
+    - Sexo:{info.get("sexo")},
+    - Castração:{info.get("castrado")},
+    - Peso:{info.get("peso")},
+    - Altura:{info.get("altura")},
+    - História:{info.get("historia")},
+    - Histórico de saúde:{info.get("saude")},
+    - Histórico de alimentação:{info.get("alimentacao")}"""
+            resumos.append(texto)
+        
+        texto_final = "\n---\n".join(resumos)
 
     # Conectando à base de dados e guardando a informação
     db = firestore.client()
@@ -775,7 +776,7 @@ def gerar_relatorio_pet_pdf(pet_data, motivo_consulta=""):
                 ['Espécie:', pet_data.get('especie', 'Não informada')],
                 ['Raça:', pet_data.get('raca', 'Não informada')],
                 ['Sexo:', pet_data.get('sexo', 'Não informado')],
-                ['Idade:', f"{pet_data.get('idade', 'N/A')} anos"],
+                ['Idade:', f"{pet_data.get('idade', 'Não informado')} anos"],
                 ['Castrado:', pet_data.get('castrado', 'Não informado')],
             ]
             
@@ -824,7 +825,7 @@ def gerar_relatorio_pet_pdf(pet_data, motivo_consulta=""):
                 ['Espécie:', pet_data.get('especie', 'Não informada')],
                 ['Raça:', pet_data.get('raca', 'Não informada')],
                 ['Sexo:', pet_data.get('sexo', 'Não informado')],
-                ['Idade:', f"{pet_data.get('idade', 'N/A')} anos"],
+                ['Idade:', f"{pet_data.get('idade', 'Não informado')} anos"],
                 ['Castrado:', pet_data.get('castrado', 'Não informado')],
             ]
             
@@ -860,7 +861,7 @@ def gerar_relatorio_pet_pdf(pet_data, motivo_consulta=""):
             ['Espécie:', pet_data.get('especie', 'Não informada')],
             ['Raça:', pet_data.get('raca', 'Não informada')],
             ['Sexo:', pet_data.get('sexo', 'Não informado')],
-            ['Idade:', f"{pet_data.get('idade', 'N/A')} anos"],
+            ['Idade:', f"{pet_data.get('idade', 'Não informado')} anos"],
             ['Castrado:', pet_data.get('castrado', 'Não informado')],
         ]
         
@@ -1307,7 +1308,7 @@ def obter_info_exames(pets):
         try:
             exames_ref = db.collection(COLECAO_USUARIOS).document(st.user.email).collection("pets").document(pet['id']).collection("exames")
             
-            docs = exames_ref.order_by("data_exame", direction=firestore.Query.DESCENDING).get()
+            docs = exames_ref.order_by("data_upload", direction=firestore.Query.DESCENDING).get()
             resumos = []
             
             for doc in docs:

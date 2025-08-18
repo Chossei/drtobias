@@ -8,6 +8,7 @@ from paginas.funcoes import (
     calcular_idade,
     atualizar_resumo_pets
 )
+from datetime import date
 
 # ============================================================================
 # CONFIGURAÇÃO DA PÁGINA
@@ -108,6 +109,8 @@ def editar_pet_dialog():
                         raca=raca_pet,
                         sexo=sexo_pet,
                         castrado=castrado_pet,
+                        peso = peso_pet,
+                        altura = altura_pet,
                         historia=historia_pet,
                         saude=saude_pet,
                         alimentacao=alimentacao_pet,
@@ -131,6 +134,7 @@ pets = obter_pets()
 if st.session_state.pet_editando:
     editar_pet_dialog()
     # Atualizando o resumo de informações dos pets para ser utilizado pelo chatbot
+    pets = obter_pets()
     atualizar_resumo_pets(pets)
 
 if pets:
@@ -162,7 +166,7 @@ if pets:
                         with col_info:
                             st.markdown(f"**{pet['nome']}**")
                             st.markdown(f"🐕 {pet['especie']}")
-                            st.markdown(f"🎂 {pet['idade']} anos")
+                            st.markdown(f"🎂 {pet['idade']}")
                             
                             # Botões de ação como subcolunas
                             col_btn1, col_btn2 = st.columns(2)
@@ -177,6 +181,7 @@ if pets:
                                     if excluir_pet(pet['id']):
                                         st.success(f"Pet {pet['nome']} excluído com sucesso!")
                                         registrar_acao_usuario("Excluir Pet", f"Usuário excluiu o pet {pet['nome']}")
+                                        pets = obter_pets()
                                         atualizar_resumo_pets(pets)
                                         st.rerun()
                                     else:
@@ -197,7 +202,7 @@ with st.form("cadastro_pet", clear_on_submit=True):
     col1, col2 = st.columns(2)
     
     with col1:
-        nome_pet = st.text_input("Nome do Pet *", placeholder="Ex: Tobi, Luna, Rex...")
+        nome_pet = st.text_iFnput("Nome do Pet *", placeholder="Ex: Tobi, Luna, Rex...")
         especie_pet = st.selectbox("Espécie *", options=[
             "Cachorro", "Gato", "Pássaro", "Coelho", "Hamster", "Peixe", "Réptil", "Outro"
         ], index=None, placeholder="Selecione a espécie")
@@ -246,8 +251,8 @@ with st.form("cadastro_pet", clear_on_submit=True):
     submitted = st.form_submit_button("🐾 Cadastrar Pet", type="primary", use_container_width=True)
     
     if submitted:
-        if not nome_pet or not raca_pet or not sexo_pet or not especie_pet or not castrado_pet:
-            st.error("Por favor, preencha todos os campos obrigatórios: **Nome**, **Espécie**, **Raça**, **Sexo** e **Castração**!")
+        if not nome_pet or not raca_pet or not sexo_pet or not especie_pet or not castrado_pet or not nascimento_pet:
+            st.error("Por favor, preencha todos os campos obrigatórios: **Nome**, **Espécie**, **Raça**, **Sexo**, **Castração** e **Data de nascimento/Adoção**!")
         else:
             # Calcula a idade
             idade_pet = calcular_idade(nascimento_pet)
@@ -268,6 +273,7 @@ with st.form("cadastro_pet", clear_on_submit=True):
                     url_foto=None  # Inicialmente sem foto
                 )
                 # Atualizando o resumo de informações dos pets para ser utilizado pelo chatbot
+                pets = obter_pets()
                 atualizar_resumo_pets(pets)
                 
                 # Se o pet foi salvo e há uma foto, faz o upload
