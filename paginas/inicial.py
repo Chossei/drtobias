@@ -77,6 +77,45 @@ def dialog_adicionar_exame(pet_id, pet_nome):
                 st.rerun()
 
 # ============================================================================
+# DIÁLOGO PARA ADICIONAR MOTIVO DA CONSULTA
+# ============================================================================
+@st.dialog("🩺 Motivo da Consulta")
+def dialog_motivo_consulta(pet):
+    st.markdown(f"### Adicione o principal motivo da consulta para {pet['nome']}")
+
+    with st.form("motivo_da_consulta"):
+        motivo = st.text_area(
+            label = "Qual o motivo da consulta? *",
+            max_chars = 300,
+            placeholder = "Ex: Meu cachorro está sem apetite e muito cansado nos últimos dias",
+            height = 100
+        )
+
+        submitted = st.form_submit_button(
+            "📄 Gerar Relatório",
+            use_container_width=True,
+            type="primary"
+        )
+
+        if submitted:
+            # Validação para garantir que o campo não está vazio
+            if not motivo:
+                st.error("Por favor, preencha o motivo da consulta antes de gerar o relatório.")
+            else:
+                with st.spinner("Gerando o relatório, por favor aguarde..."):
+                    data = gerar_relatorio_pet_pdf(pet, motivo_consulta=motivo)
+                    st.success("✅ Relatório gerado com sucesso! Clique abaixo para baixar.")
+                    st.download_button(
+                        label= "🗂️ Baixar relatório agora", data = data,
+                        file_name= f"relatorio_completo_{pet['nome']}.pdf",
+                        mime = "application/pdf",
+                        use_container_width=True,
+                        type="primary"
+                    )
+
+        
+
+# ============================================================================
 # WELCOME MESSAGE
 # ============================================================================
 
@@ -233,16 +272,21 @@ if len(pets) > 0:
                             help_text = "Baixar relatório veterinário"
                             label_texto = "📄 Gerar Relatório"
                         
-                        # Botão de download direto
-                        st.download_button(
-                            label=label_texto,
-                            data=gerar_relatorio_pet_pdf(pet),
-                            file_name=f"relatorio_completo_{pet['nome']}.pdf",
-                            mime="application/pdf",
-                            help=help_text,
-                            use_container_width=True,
-                            type="primary"
-                        )
+                        # Caixa de diálogo para baixar 
+                        if st.button(label = label_texto, help = help_text, use_container_width=True,
+                            type = "primary"):
+                            dialog_motivo_consulta(pet)
+
+                        # # Botão de download direto
+                        # st.download_button(
+                        #     label=label_texto,
+                        #     data=gerar_relatorio_pet_pdf(pet, motivo_consulta = motivo),
+                        #     file_name=f"relatorio_completo_{pet['nome']}.pdf",
+                        #     mime="application/pdf",
+                        #     help=help_text,
+                        #     use_container_width=True,
+                        #     type="primary"
+                        # )
                     
                     with col_btn2:
                         # Botão de adicionar exame

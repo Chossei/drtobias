@@ -698,7 +698,7 @@ def excluir_pet(pet_id):
 # FUNÇÃO PARA GERAR RELATÓRIO PDF DO PET
 # ============================================================================
 
-def gerar_relatorio_pet_pdf(pet_data):
+def gerar_relatorio_pet_pdf(pet_data, motivo_consulta=""):
     """
     Gera um relatório PDF completo do pet para veterinário, incluindo exames.
     
@@ -906,6 +906,12 @@ def gerar_relatorio_pet_pdf(pet_data):
         story.append(Paragraph(pet_data['alimentacao'], styles['Normal']))
         story.append(Spacer(1, 15))
     
+    # Motivo da consulta de acordo com o relato do tutor 
+    if len(motivo_consulta) > 1:
+        story.append(Paragraph("MOTIVO DA CONSULTA SEGUNDO O TUTOR", subtitulo_style))
+        story.append(Paragraph(motivo_consulta, styles['Normal']))
+        story.append(Spacer(1, 15))
+
     # Seção de Exames
     exames = obter_exames_pet(pet_data.get('id'))
     if exames:
