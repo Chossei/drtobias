@@ -21,6 +21,8 @@ def relator(pet_id, exame_doc_id, pdf):
         - pdf: arquivo pdf presente na memória do streamlit
     """
 
+    # Para que a função não leia um arquivo vazio
+    pdf.seek[0]
 
     # Extraindo o texto dos pdfs
     texto = ""
