@@ -101,7 +101,7 @@ def relator(pet_id, exame_doc_id, pdf):
 
     try:
         print(saida)
-        exames_doc.add(saida)
+        exames_doc.set(saida, merge=True)
         return True
     except Exception as e:
         return f"Erro ao extrair informações do exame: {e}"
