@@ -909,7 +909,7 @@ def gerar_relatorio_pet_pdf(pet_data, motivo_consulta=""):
     
     # Motivo da consulta de acordo com o relato do tutor 
     if len(motivo_consulta) > 1:
-        story.append(Paragraph("MOTIVO DA CONSULTA SEGUNDO O TUTOR", subtitulo_style))
+        story.append(Paragraph("🍽️ MOTIVO DA CONSULTA SEGUNDO O TUTOR", subtitulo_style))
         story.append(Paragraph(motivo_consulta, styles['Normal']))
         story.append(Spacer(1, 15))
 
