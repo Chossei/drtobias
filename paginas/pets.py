@@ -53,7 +53,7 @@ def editar_pet_dialog():
             castrado_pet = st.selectbox("Pet castrado? *", 
                                       options=["Sim", "Não", "Não sei"],
                                       index=["Sim", "Não", "Não sei"].index(pet['castrado']) if pet['castrado'] in ["Sim", "Não", "Não sei"] else 0)
-            altura_pet = st.number_input("Altura (em cm)", min_value=0, max_value=300, step=1)
+            altura_pet = st.number_input("Altura (em cm)", value = 0, min_value=0, max_value=300, step=1)
             saude_pet = st.text_area("Saúde Geral do Pet", value=pet.get('saude', ''), height=100)
         
         alimentacao_pet = st.text_area("Alimentação", value=pet.get('alimentacao', ''), height=100)
@@ -222,7 +222,7 @@ with st.form("cadastro_pet", clear_on_submit=True):
         sexo_pet = st.selectbox("Sexo *", options=["Macho", "Fêmea"], index=None, placeholder="Selecione o sexo")
         nascimento_pet = st.date_input("Data de nascimento (ou adoção) *", value=None, max_value=date.today(), format = "DD/MM/YYYY")
         castrado_pet = st.selectbox("Pet castrado? *", options=["Sim", "Não", "Não sei"], index=None, placeholder="Selecione uma opção")
-        altura_pet = st.number_input("Altura (em cm)", min_value=0, max_value=300, step=1)
+        altura_pet = st.number_input("Altura (em cm)", value = 0, min_value=0, max_value=300, step=1)
         saude_pet = st.text_area(
             "Saúde Geral do Pet",
             placeholder="Descreva o estado de saúde: doenças, cirurgias anteriores, medicamentos, consultas veterinárias...",
