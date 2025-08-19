@@ -193,6 +193,7 @@ def obter_perfil_usuario():
                 "primeiro_nome_google": dados.get("primeiro_nome_google", ""),
                 # Data de criação para exibir no perfil
                 "data_criacao": dados.get("data_cadastro", None),
+                "resumos_pet": dados.get("resumos_pet", "Ainda não há pets cadastrados.")
             }
         else:
             # Usuário logado mas sem registro no Firestore (situação anormal)
@@ -659,7 +660,7 @@ def atualizar_resumo_pets(pets):
     - Histórico de alimentação:{info.get("alimentacao")}"""
             resumos.append(texto)
         
-        texto_final = "\n---\n".join(resumos)
+        texto_final = "---".join(resumos)
 
     # Conectando à base de dados e guardando a informação
     db = firestore.client()
