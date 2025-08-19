@@ -59,7 +59,7 @@ def dialog_adicionar_exame(pet_id, pet_nome):
                                 
                                 try:
                                     # Encaminha as informações gerais do exame, tratadas pela IA, para o banco de dados
-                                    relator(pet_id = pet_id, exame_doc_id = exame_id, pdf = arquivo_pdf):
+                                    relator(pet_id = pet_id, exame_doc_id = exame_id, pdf = arquivo_pdf)
                                     st.success(f"✅ Ótimo! Nosso assistente digital já estudou o exame de {pet_nome} e está pronto para conversar sobre os resultados.",
                                     width="stretch")
                                 except Exception as erro:
