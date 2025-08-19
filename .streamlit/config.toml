@@ -1,7 +1,7 @@
 [theme]
 base="light"
-primaryColor="#30a7bf"
-secondaryBackgroundColor="#e0fbff"
+primaryColor="#f7941e"
+secondaryBackgroundColor="#0038a8"
 
 [client]
 toolbarMode = "viewer"
