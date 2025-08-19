@@ -513,8 +513,8 @@ def salvar_pet(nome, especie, idade, raca, sexo, castrado, peso, altura, histori
             "url_foto": url_foto,
             
             # Informações detalhadas
-            "peso": peso or "",
-            "altura": altura or "",
+            "peso": peso or 0,
+            "altura": altura or 0,
             "historia": historia or "",
             "saude": saude or "",
             "alimentacao": alimentacao or "",
@@ -561,8 +561,8 @@ def obter_pets():
                 "url_foto": pet_data.get("url_foto", ""),
                 
                 # Informações detalhadas
-                "peso": pet_data.get("peso", ""),
-                "altura": pet_data.get("altura", ""),
+                "peso": pet_data.get("peso", 0),
+                "altura": pet_data.get("altura", 0),
                 "historia": pet_data.get("historia", ""),
                 "saude": pet_data.get("saude", ""),
                 "alimentacao": pet_data.get("alimentacao", ""),
@@ -616,8 +616,8 @@ def editar_pet(pet_id, nome, especie, idade, raca, sexo, castrado, peso, altura,
             "url_foto": url_foto,
             
             # Informações detalhadas
-            "peso": peso or "",
-            "altura": altura or "",
+            "peso": peso or 0,
+            "altura": altura or 0,
             "historia": historia or "",
             "saude": saude or "",
             "alimentacao": alimentacao or "",
