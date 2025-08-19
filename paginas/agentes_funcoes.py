@@ -90,6 +90,7 @@ def relator(pet_id, exame_doc_id, pdf):
             "schema": esquema["schema"],
             "strict": esquema["strict"]
         }
+        }
         )
 
     # Saída em formato de texto, objetivando JSON
