@@ -3,7 +3,7 @@ base="dark"
 primaryColor="#f7941e"
 backgroundColor="#c2cee9ff"
 secondaryBackgroundColor="#7184acff"
-textColor="#FFFFFF"
+textColor="#000000ff"
 
 [client]
 toolbarMode = "viewer"
