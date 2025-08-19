@@ -24,6 +24,7 @@ def relator(pet_id, exame_doc_id, pdf):
     # Extraindo o texto dos pdfs
     texto = ""
     try:
+        pdf.seek(0)
         leitor = PyPDF2.PdfReader(pdf.read())
         for pagina in leitor.pages:
             texto_pagina = pagina.extract_text()
