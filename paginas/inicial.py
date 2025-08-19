@@ -96,6 +96,8 @@ def dialog_motivo_consulta(pet):
             use_container_width=True,
             type="primary"
         )
+        
+        condicao = False
 
         if submitted:
             # Validação para garantir que o campo não está vazio
@@ -105,13 +107,18 @@ def dialog_motivo_consulta(pet):
                 with st.spinner("Gerando o relatório, por favor aguarde..."):
                     data = gerar_relatorio_pet_pdf(pet, motivo_consulta=motivo)
                     st.success("✅ Relatório gerado com sucesso! Clique abaixo para baixar.")
-                    st.download_button(
+                    condicao = True
+    
+    if condicao==True:
+        st.download_button(
                         label= "🗂️ Baixar relatório agora", data = data,
                         file_name= f"relatorio_completo_{pet['nome']}.pdf",
                         mime = "application/pdf",
                         use_container_width=True,
                         type="primary"
                     )
+
+
 
         
 
