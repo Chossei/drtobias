@@ -29,8 +29,7 @@ def relator(pet_id, exame_doc_id, pdf):
             if texto_pagina:
                 texto += texto_pagina
     except Exception as erro:
-        print(f"Erro ao extrair o texto do pdf: {erro}")
-        return None
+        return f"Erro ao extrair o texto do pdf: {erro}"
 
     # Definindo o prompt para o agente
     prompt = """Você é um agente de IA treinado para ler, extrair e interpretar informações de laudos de exames veterinários.
@@ -95,6 +94,5 @@ def relator(pet_id, exame_doc_id, pdf):
         exames_doc.set(saida, merge=True)
         return True
     except Exception as e:
-        print(f"Erro ao extrair informações do exame: {e}")
-        return None
+        return f"Erro ao extrair informações do exame: {e}"
 
