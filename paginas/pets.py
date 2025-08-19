@@ -202,7 +202,7 @@ with st.form("cadastro_pet", clear_on_submit=True):
     col1, col2 = st.columns(2)
     
     with col1:
-        nome_pet = st.text_iFnput("Nome do Pet *", placeholder="Ex: Tobi, Luna, Rex...")
+        nome_pet = st.text_input("Nome do Pet *", placeholder="Ex: Tobi, Luna, Rex...")
         especie_pet = st.selectbox("Espécie *", options=[
             "Cachorro", "Gato", "Pássaro", "Coelho", "Hamster", "Peixe", "Réptil", "Outro"
         ], index=None, placeholder="Selecione a espécie")
