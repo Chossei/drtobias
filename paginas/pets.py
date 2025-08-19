@@ -41,8 +41,8 @@ def editar_pet_dialog():
                                      options=["Cachorro", "Gato", "Pássaro", "Coelho", "Hamster", "Peixe", "Réptil", "Outro"],
                                      index=["Cachorro", "Gato", "Pássaro", "Coelho", "Hamster", "Peixe", "Réptil", "Outro"].index(pet['especie']) if pet['especie'] in ["Cachorro", "Gato", "Pássaro", "Coelho", "Hamster", "Peixe", "Réptil", "Outro"] else 0)
             raca_pet = st.text_input("Raça *", value=pet['raca'])
-            peso_pet = st.number_input("Peso (em kg)", placeholder="Ex: 2.54", min_value = 0.0, max_value=100.0,
-            step = 0.1)
+            peso_pet = st.number_input("Peso (em kg)", placeholder="Ex: 2.54", min_value = 0.00, max_value=100.00,
+            step = 0.10)
             historia_pet = st.text_area("História do Pet", value=pet.get('historia', ''), height=100)
         
         with col2:
@@ -210,8 +210,8 @@ with st.form("cadastro_pet", clear_on_submit=True):
             "Cachorro", "Gato", "Pássaro", "Coelho", "Hamster", "Peixe", "Réptil", "Outro"
         ], index=None, placeholder="Selecione a espécie")
         raca_pet = st.text_input("Raça *", placeholder="Ex: Golden Retriever, SRD, Persa...")
-        peso_pet = st.number_input("Peso (em kg)", placeholder="Ex: 2.54", min_value = 0.0, max_value=100.0,
-        step = 0.1)
+        peso_pet = st.number_input("Peso (em kg)", placeholder="Ex: 2.54", min_value = 0.00, max_value=100.00,
+        step = 0.10)
         historia_pet = st.text_area(
             "História do Pet",
             placeholder="Conte a história do seu pet: como chegou até você, personalidade, comportamentos especiais...",
