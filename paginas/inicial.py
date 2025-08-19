@@ -59,19 +59,19 @@ def dialog_adicionar_exame(pet_id, pet_nome):
                                 
                                 # Encaminha as informações gerais do exame, tratadas pela IA, para o banco de dados
                                 relator(pet_id = pet_id, exame_doc_id = exame_id, pdf = arquivo_pdf)
-                                st.success(f"✅ Ótimo! Nosso assistente digital já estudou o exame de {pet_nome} e está pronto para conversar sobre os resultados.",
-                                width="stretch")
-
-                                st.balloons()
-                                
-                                # Pausa antes de fechar o diálogo
-                                import time
-                                time.sleep(5)
-                                st.rerun()
                             else:
                                 st.error("❌ Erro ao salvar exame no banco de dados.")
                         else:
                             st.error("❌ Erro ao fazer upload do arquivo. Tente novamente.")
+                    st.success(f"✅ Ótimo! Nosso assistente digital já estudou o exame de {pet_nome} e está pronto para conversar sobre os resultados.",
+                                width="stretch")
+                    st.balloons()
+
+                    # Pausa antes de fechar o diálogo
+                    import time
+                    time.sleep(5)
+                    st.rerun()
+                    
         
         with col2:
             if st.form_submit_button("❌ Cancelar", use_container_width=True):
