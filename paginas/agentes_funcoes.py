@@ -2,6 +2,7 @@ import streamlit as st
 import json
 import firebase_admin
 import PyPDF2
+import io
 from openai import OpenAI 
 from paginas.funcoes import COLECAO_USUARIOS
 from firebase_admin import firestore, credentials, storage
