@@ -207,7 +207,7 @@ with st.form("cadastro_pet", clear_on_submit=True):
             "Cachorro", "Gato", "Pássaro", "Coelho", "Hamster", "Peixe", "Réptil", "Outro"
         ], index=None, placeholder="Selecione a espécie")
         raca_pet = st.text_input("Raça *", placeholder="Ex: Golden Retriever, SRD, Persa...")
-        peso_pet = st.number_input("Peso (em kg)", placeholder="Ex: 2.54", min_value = 0, max_value=100,
+        peso_pet = st.number_input("Peso (em kg)", placeholder="Ex: 2.54", min_value = 0.0, max_value=100.0,
         step = 0.1)
         historia_pet = st.text_area(
             "História do Pet",
