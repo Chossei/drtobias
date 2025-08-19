@@ -305,9 +305,6 @@ if len(pets) > 0:
                             type="secondary"
                         ):
                             dialog_adicionar_exame(pet['id'], pet['nome'])
-        
-        # Espaçamento entre linhas de pets
-        st.markdown("---")
 else:
     # Mensagem quando não há pets cadastrados
     st.info("🐾 **Você ainda não cadastrou nenhum pet!**")
