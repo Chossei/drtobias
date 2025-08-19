@@ -646,16 +646,16 @@ def atualizar_resumo_pets(pets):
     else:
         resumos = []
         for info in pets:
-            texto = f"""- Pet:{info.get("nome")},
-    - Espécie:{info.get("especie")},
-    - Idade:{info.get("idade")},
-    - Raça:{info.get("raca")},
-    - Sexo:{info.get("sexo")},
-    - Castração:{info.get("castrado")},
-    - Peso:{info.get("peso")},
-    - Altura:{info.get("altura")},
-    - História:{info.get("historia")},
-    - Histórico de saúde:{info.get("saude")},
+            texto = f"""- Pet:{info.get("nome")},\n
+    - Espécie:{info.get("especie")},\n
+    - Idade:{info.get("idade")},\n
+    - Raça:{info.get("raca")},\n
+    - Sexo:{info.get("sexo")},\n
+    - Castração:{info.get("castrado")},\n
+    - Peso:{info.get("peso")},\n
+    - Altura:{info.get("altura")},\n
+    - História:{info.get("historia")},\n
+    - Histórico de saúde:{info.get("saude")},\n
     - Histórico de alimentação:{info.get("alimentacao")}"""
             resumos.append(texto)
         
