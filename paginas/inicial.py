@@ -54,12 +54,13 @@ def dialog_adicionar_exame(pet_id, pet_nome):
                             exame_id = salvar_exame_pet(pet_id, nome_exame, url_pdf)
                             
                             if exame_id:
-                                st.success(f"✅ Exame '{nome_exame}' adicionado com sucesso!")
+                                st.success(f"✅ Exame '{nome_exame}' adicionado com sucesso!", width="stretch")
                                 registrar_acao_usuario("Adicionar Exame", f"Usuário adicionou exame '{nome_exame}' para o pet {pet_nome}")
                                 
                                 # Encaminha as informações gerais do exame, tratadas pela IA, para o banco de dados
                                 relator(pet_id = pet_id, exame_doc_id = exame_id, pdf = arquivo_pdf)
-                                st.success(f"✅ Ótimo! Nosso assistente digital já estudou o exame de {pet_nome} e está pronto para conversar sobre os resultados.")
+                                st.success(f"✅ Ótimo! Nosso assistente digital já estudou o exame de {pet_nome} e está pronto para conversar sobre os resultados.",
+                                width="stretch")
 
                                 st.balloons()
                                 
