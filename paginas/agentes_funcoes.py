@@ -100,7 +100,8 @@ def relator(pet_id, exame_doc_id, pdf):
     exames_doc = db.collection(COLECAO_USUARIOS).document(st.user.email).collection("pets").document(pet_id).collection("exames").document(exame_doc_id)
 
     try:
-        exames_doc.set(saida, merge=True)
+        print(saida)
+        exames_doc.add(saida)
         return True
     except Exception as e:
         return f"Erro ao extrair informações do exame: {e}"
