@@ -80,7 +80,7 @@ def dialog_adicionar_exame(pet_id, pet_nome):
 # ============================================================================
 # DIÁLOGO PARA ADICIONAR MOTIVO DA CONSULTA
 # ============================================================================
-@st.dialog("🩺 Motivo da Consulta")
+@st.dialog("🩺 Motivo da Consulta", width = "stretch")
 def dialog_motivo_consulta(pet):
     st.markdown(f"### Adicione o principal motivo da consulta para {pet['nome']}")
 

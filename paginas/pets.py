@@ -28,7 +28,7 @@ if 'pet_editando' not in st.session_state:
 # JANELA DE DIÁLOGO PARA EDIÇÃO DE PET
 # ============================================================================
 
-@st.dialog("Editar Pet")
+@st.dialog("Editar Pet", width = "large")
 def editar_pet_dialog():
     pet = st.session_state.pet_editando
     
