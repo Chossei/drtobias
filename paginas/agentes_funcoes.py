@@ -83,7 +83,13 @@ def relator(pet_id, exame_doc_id, pdf):
                     {'role': 'user', 'content': texto}],
     
         # Garante o formato JSON ao final 
-        response_format={'type': 'json_schema', 'json_schema': esquema}
+        response_format={
+        "type": "json_schema",
+        "json_schema": {
+            "name": "exame_schema",  # <- ESSA LINHA É O QUE FALTAVA
+            "schema": esquema["schema"],
+            "strict": esquema["strict"]
+        }
         )
 
     # Saída em formato de texto, objetivando JSON
