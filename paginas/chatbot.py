@@ -99,7 +99,7 @@ INFORMAÇÕES DO USUÁRIO:
 - Situação Atual: {perfil.get('situacao_atual', 'Não informada')}
 
 INFORMAÇÕES DOS PETS:
-{perfil.get('resumos_pet', 'Resumo ainda não informado')}
+{perfil['resumos_pet']}
 
 INFORMAÇÕES DOS EXAMES DE CADA PET:
 {contexto_exames}
