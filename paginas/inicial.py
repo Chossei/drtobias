@@ -21,6 +21,20 @@ st.markdown("*Bem-vindo ao seu assistente veterinário especializado! Aqui você
 
 @st.dialog("📄 Adicionar Exame")
 def dialog_adicionar_exame(pet_id, pet_nome):
+    # CSS pra aumentar largura da caixa de diálogo
+    st.markdown(
+        """
+        <style>
+        [data-testid="stDialog"] {
+            width: 80% !important;      /* aumenta largura */
+            max-width: 900px !important; /* limite máximo */
+            margin: auto !important;     /* centraliza */
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
     st.markdown(f"### Adicionar exame para **{pet_nome}**")
     
     with st.form("form_adicionar_exame"):
@@ -65,7 +79,7 @@ def dialog_adicionar_exame(pet_id, pet_nome):
                                 
                                 # Pausa antes de fechar o diálogo
                                 import time
-                                time.sleep(2)
+                                time.sleep(5)
                                 st.rerun()
                             else:
                                 st.error("❌ Erro ao salvar exame no banco de dados.")
