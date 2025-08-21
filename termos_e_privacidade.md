@@ -1,19 +1,19 @@
 # Termos de Uso e Política de Privacidade - Dr. Tobias
 
-Bem-vindo ao Dr. Tobias - Especialista em Pets! Ao utilizar nossos serviços de assistência veterinária virtual, você concorda com os seguintes termos e políticas.
+Bem-vindo à nossa plataforma! Ao utilizar nossos serviços de assistência veterinária virtual, você concorda com os seguintes termos e políticas.
 
 ## 1. Termos de Uso
 
-*   **Aceitação dos Termos:** Ao acessar e usar o serviço Dr. Tobias, você aceita e concorda em estar vinculado aos termos e disposições deste acordo.
-*   **Natureza do Serviço:** Dr. Tobias é um assistente veterinário virtual baseado em inteligência artificial, criado para oferecer orientação geral sobre cuidados com pets, comportamento animal, alimentação e bem-estar. NÃO substitui atendimento profissional de veterinários qualificados.
+*   **Aceitação dos Termos:** Ao acessar e usar nosso serviço, você aceita e concorda em estar vinculado aos termos e disposições deste acordo.
+*   **Natureza do Serviço:** Este é um assistente veterinário virtual baseado em inteligência artificial, criado para oferecer orientação geral sobre cuidados com pets, comportamento animal, alimentação e bem-estar. NÃO substitui atendimento profissional de veterinários qualificados.
 *   **Uso do Serviço:** Você concorda em usar o serviço apenas para questões relacionadas a pets, cuidados animais e bem-estar dos seus bichinhos, de maneira respeitosa e legal.
-*   **Limitações:** Dr. Tobias oferece conselhos gerais baseados em conhecimentos veterinários comuns. Para emergências, problemas de saúde sérios ou diagnósticos específicos, sempre procure um veterinário qualificado presencialmente.
+*   **Limitações:** O assistente virtual oferece conselhos gerais baseados em conhecimentos veterinários comuns. Para emergências, problemas de saúde sérios ou diagnósticos específicos, sempre procure um veterinário qualificado presencialmente.
 *   **Conduta do Usuário:** Você é responsável por sua conduta e por qualquer conteúdo que fornecer. Esperamos respeito pelos animais e linguagem apropriada em todas as interações.
 *   **Modificações nos Termos:** Reservamo-nos o direito de modificar estes termos a qualquer momento. Notificaremos sobre alterações significativas através do serviço.
 
 ## 2. Política de Privacidade
 
-Esta política descreve como coletamos, usamos e protegemos suas informações pessoais no Dr. Tobias.
+Esta política descreve como coletamos, usamos e protegemos suas informações pessoais em nossa plataforma.
 
 *   **Informações Coletadas:**
     *   **Informações de Login:** Quando você faz login usando o Google, coletamos as informações fornecidas pelo Google, como seu nome, endereço de e-mail e foto de perfil, conforme autorizado por você.
@@ -23,11 +23,11 @@ Esta política descreve como coletamos, usamos e protegemos suas informações p
         - Experiência com pets
         - Tipos de pets que tem/teve
         - Situação atual com pets
-    *   **Dados de Conversas:** As conversas que você tem com Dr. Tobias são armazenadas para personalizar e melhorar o atendimento sobre seus pets. Esses dados são tratados com total confidencialidade e apenas acessados pelos criadores da plataforma para fins de melhoria do serviço.
+    *   **Dados de Conversas:** As conversas que você tem com o assistente virtual são armazenadas para personalizar e melhorar o atendimento sobre seus pets. Esses dados são tratados com total confidencialidade e apenas acessados pelos criadores da plataforma para fins de melhoria do serviço.
     *   **Dados de Uso:** Coletamos informações sobre como você usa o serviço, como frequência de conversas e tópicos sobre pets discutidos, sempre de forma anônima e agregada.
 
 *   **Uso das Informações:**
-    *   Para personalizar os conselhos de Dr. Tobias com base no seu perfil e experiência com pets
+    *   Para personalizar os conselhos do assistente virtual com base no seu perfil e experiência com pets
     *   Para melhorar a qualidade e relevância das orientações sobre cuidados animais
     *   Para entender padrões gerais de uso e aprimorar o serviço
     *   Para manter a segurança e prevenir uso inadequado
@@ -49,10 +49,10 @@ Esta política descreve como coletamos, usamos e protegemos suas informações p
 
 ## 3. Disclaimer Importante
 
-🐾 **ATENÇÃO: Dr. Tobias é um assistente de IA, não um veterinário real**
+🐾 **ATENÇÃO: Este é um assistente de IA, não um veterinário real**
 
 *   **Emergências:** Em caso de emergência com seu pet (ferimentos graves, envenenamento, dificuldade respiratória, convulsões, etc.), procure IMEDIATAMENTE um veterinário ou clínica veterinária de emergência. Não confie apenas nas orientações da IA.
-*   **Diagnósticos:** Dr. Tobias NÃO pode diagnosticar doenças, prescrever medicamentos ou substituir exames veterinários. Sempre consulte um profissional qualificado.
+*   **Diagnósticos:** O assistente virtual NÃO pode diagnosticar doenças, prescrever medicamentos ou substituir exames veterinários. Sempre consulte um profissional qualificado.
 *   **Responsabilidade:** O usuário é totalmente responsável pelas decisões tomadas em relação aos cuidados com seus pets, mesmo após consultar Dr. Tobias.
 
 ## 4. Contato
@@ -61,4 +61,4 @@ Se você tiver dúvidas sobre estes termos ou políticas, ou precisar de suporte
 
 ---
 
-🐾 *Dr. Tobias - Sempre aqui para ajudar você a cuidar melhor dos seus pets!*
+🐾 *Pelunos - Um clique de cuidado, seu pet mais saudável!*

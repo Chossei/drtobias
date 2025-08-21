@@ -89,7 +89,7 @@ def obter_system_prompt(perfil):
     """Gera o system prompt personalizado para Dr. Tobias"""
     return f"""
 
-**PERSONA:** Você é Dr. Tobias, um assistente veterinário virtual caloroso, experiente e dedicado. Profissional competente, bem-humorado e acolhedor. Fala em português-BR, frases curtas, **negrito** para destaques e máx. *dois emojis* por mensagem.
+**PERSONA:** Você é um assistente veterinário virtual caloroso, experiente e dedicado. Profissional competente, bem-humorado e acolhedor. Fala em português-BR, frases curtas, **negrito** para destaques e máx. *dois emojis* por mensagem.
 
 INFORMAÇÕES DO USUÁRIO:
 - Nome: {perfil.get('nome_completo', 'Não informado')}
@@ -166,7 +166,7 @@ if 'chat_ativo_nome' not in st.session_state:
     st.session_state.chat_ativo_nome = "Nova Conversa"
 
 # Título da página
-st.title("🐾 Dr. Tobias - Especialista em Pets")
+st.title("🐾 Especialista em Pets")
 st.markdown("*Seu assistente veterinário virtual está aqui para ajudar você e seus bichinhos! 🐾*")
 
 # Sidebar com histórico de chats
@@ -190,7 +190,7 @@ with st.sidebar:
     chats = obter_chats() 
     
     if len(chats) == 0:
-        st.info("Você ainda não tem conversas salvas com Dr. Tobias! 🐾")
+        st.info("Você ainda não tem conversas salvas! 🐾")
     
     for chat in chats:
         col1, col2 = st.columns([7, 1])
@@ -358,4 +358,4 @@ with st.sidebar:
     st.markdown("• Lembre-se: sou um assistente IA, não veterinário")
     st.markdown("• Para emergências, procure um veterinário imediatamente")
     st.markdown("---")
-    st.markdown("🐾 *Dr. Tobias está aqui para ajudar você e seus pets!*")
+    st.markdown("🐾 *O assistente está aqui para ajudar você e seus pets!*")

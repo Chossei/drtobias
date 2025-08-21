@@ -6,7 +6,7 @@ import os # Importar os
 inicializar_firebase() 
 
 st.set_page_config(
-    page_title="Dr. Tobias - Especialista em Pets",  
+    page_title="Pelunos - Seu Pet Mais Saudável",  
     page_icon="arquivos/avatar_assistente.jpg", 
     layout='wide',                       
     initial_sidebar_state="expanded"
@@ -21,7 +21,7 @@ if not hasattr(st.user, 'is_logged_in') or not st.user.is_logged_in:
     with col2:
         # Logo centralizada
         st.image('arquivos/capa.jpg', width=200, use_container_width=True)
-        st.title("🐾 Dr. Tobias - Especialista em Pets 🐾") 
+        st.title("🐾 Pelunos - Seu Pet Mais Saudável 🐾") 
         st.markdown("Faça login com sua conta Google para conversar com seu veterinário especialista em pets.")
         # Botão de login
         if st.button("Login com Google", type="primary", use_container_width=True, icon=':material/login:'):
@@ -56,7 +56,7 @@ else:
 
     if perfil and not perfil.get("primeiro_acesso_concluido", False):
         # --- Formulário de Primeiro Acesso ---
-        st.title("🐾 Bem-vindo ao Dr. Tobias!")
+        st.title("🐾 Bem-vindo ao Pelunos!")
         st.info("Para eu te ajudar melhor com seus pets, preciso conhecer você e seus bichinhos. Me conta sobre vocês:")
         
         with st.form(key="primeiro_acesso_form", clear_on_submit=False):
@@ -94,8 +94,8 @@ else:
             
             # Checkbox de consentimento
             st.markdown("### 🐾 Antes de começarmos!")
-            st.markdown("Sou Dr. Tobias, seu assistente veterinário virtual! Estou aqui para te ajudar com questões sobre pets, comportamento animal e cuidados básicos. Lembre-se que sou uma IA e minhas respostas são para orientação geral - para emergências ou problemas sérios de saúde, sempre procure um veterinário qualificado.")
-            consentimento = st.checkbox("Entendo que Dr. Tobias é uma IA assistente para orientação geral sobre pets e que para emergências ou problemas de saúde devo procurar um veterinário qualificado!")
+            st.markdown("Sou seu assistente veterinário virtual personalizado! Estou aqui para te ajudar com questões sobre pets, comportamento animal e cuidados básicos. Lembre-se que sou uma IA e minhas respostas são para orientação geral - para emergências ou problemas sérios de saúde, sempre procure um veterinário qualificado.")
+            consentimento = st.checkbox("Entendo que o veterinário virtual é uma IA assistente para orientação geral sobre pets e que para emergências ou problemas de saúde devo procurar um veterinário qualificado!")
             
             # Botão sempre ativo
             submitted = st.form_submit_button("Começar nossa conversa! 🐾", type="primary")
@@ -127,7 +127,7 @@ else:
         
         # Define a estrutura das páginas para Dr. Tobias
         paginas = {
-            "Dr. Tobias": [
+            "Pelunos": [
                 st.Page("paginas/inicial.py", title="Página Inicial", icon='🏠', default=True),
                 st.Page("paginas/chatbot.py", title="Conversar", icon='💬'),
                 st.Page("paginas/pets.py", title="Cadastro Pet", icon='🐾'), 

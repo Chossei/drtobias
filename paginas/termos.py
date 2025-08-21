@@ -2,7 +2,7 @@ import streamlit as st
 import os 
 
 st.title("📜 Termos de Uso e Política de Privacidade")
-st.markdown("*Dr. Tobias - Especialista em Pets*")
+st.markdown("*Modelo de IA Especialista em Pets*")
 st.markdown("---")
 
 # Caminho do arquivo termos_e_privacidade.md (na raiz do projeto)

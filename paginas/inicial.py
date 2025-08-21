@@ -12,7 +12,7 @@ from paginas.agentes_funcoes import (
     relator
 )
 
-st.title("🏠 Dr. Tobias - Página Inicial")
+st.title("🏠 Pelunos - Página Inicial")
 st.markdown("*Bem-vindo ao seu assistente veterinário especializado! Aqui você pode acompanhar seus pets e acessar todas as funcionalidades.*")
 
 # ============================================================================
@@ -59,7 +59,6 @@ def dialog_adicionar_exame(pet_id, pet_nome):
                                 
                                 # Encaminha as informações gerais do exame, tratadas pela IA, para o banco de dados
                                 resultado = relator(pet_id = pet_id, exame_doc_id = exame_id, pdf = arquivo_pdf)
-                                st.write("DEBUG resultado do relator:", resultado)
                                 st.success(f"✅ Ótimo! Nosso assistente digital já estudou o exame de {pet_nome} e está pronto para conversar sobre os resultados.",
                                     width="stretch")
                             else:
@@ -135,6 +134,41 @@ else:
     st.markdown("### Olá! 👋")
 
 # ============================================================================
+#  BLOCO DE ESTILO CSS PARA OS CARDS DOS PETS
+# ============================================================================
+st.markdown("""
+<style>
+    /* O seletor [data-testid="stVerticalBlockBorderWrapper"] é o que o Streamlit usa para o st.container(border=True) */
+    [data-testid="stVerticalBlockBorderWrapper"] {
+        background-color: #f8f9fa;  /* Cor de fundo do card, um cinza bem claro */
+        border-radius: 20px;       /* Bordas arredondadas */
+        border: 2px solid #e9ecef; /* Cor e espessura da borda */
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1); /* Sombra para dar profundidade */
+        transition: all 0.3s;      /* Animação suave para o hover */
+        padding: 15px;             /* Espaçamento interno */
+    }
+
+    /* Efeito de HOVER (quando o mouse passa por cima) */
+    [data-testid="stVerticalBlockBorderWrapper"]:hover {
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2); /* Sombra mais forte */
+        transform: scale(1.03);    /* Aumenta levemente o tamanho do card */
+        border-color: #4A90E2;      /* Muda a cor da borda para destacar */
+    }
+
+    /* Arredonda as bordas da imagem DENTRO do card para combinar */
+    [data-testid="stVerticalBlockBorderWrapper"] img {
+        border-radius: 15px;
+    }
+
+    /* Melhora o visual do botão primário dentro do card */
+    [data-testid="stVerticalBlockBorderWrapper"] .stButton > button[kind="primary"] {
+        background-color: #4A90E2;
+        border: 2px solid #4A90E2;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# ============================================================================
 # LISTAGEM DOS PETS CADASTRADOS
 # ============================================================================
 
@@ -175,37 +209,42 @@ if len(pets) > 0:
                     
                     # Informações detalhadas agrupadas em "Saber mais"
                     with st.expander("ℹ️ Saber mais", expanded=False):
-                        # Informações de castração
-                        if pet['castrado'] == "Sim":
-                            castrado_icon = "✅"
-                        elif pet['castrado'] == "Não":
-                            castrado_icon = "❌"
-                        elif pet['castrado'] == "Não sei":
-                            castrado_icon = "❓"
-                        else:
-                            # Para pets antigos que podem ter valor boolean
-                            castrado_icon = "✅" if pet['castrado'] else "❌"
-                        st.markdown(f"**🔸 Castrado:** {castrado_icon} {pet['castrado']}")
+                        # Estrutura de coluna
+                        coluna1, coluna2 = st.columns(2)
+                        with coluna1:
+                            # Informações de castração
+                            if pet['castrado'] == "Sim":
+                                castrado_icon = "✅"
+                            elif pet['castrado'] == "Não":
+                                castrado_icon = "❌"
+                            elif pet['castrado'] == "Não sei":
+                                castrado_icon = "❓"
+                            else:
+                                # Para pets antigos que podem ter valor boolean
+                                castrado_icon = "✅" if pet['castrado'] else "❌"
+                            st.markdown(f"**🔸 Castrado:** {castrado_icon} {pet['castrado']}")
                         
-                        # Data de cadastro
-                        if pet["data_cadastro"]:
-                            try:
-                                if hasattr(pet["data_cadastro"], "date"):
-                                    data_formatada = pet["data_cadastro"].date().strftime("%d/%m/%Y")
-                                else:
-                                    data_formatada = str(pet["data_cadastro"])[:10]
-                            except:
-                                data_formatada = "Data não disponível"
-                            st.markdown(f"**📅 Cadastrado em:** {data_formatada}")
+                        with coluna2:
+                            # Data de cadastro
+                            if pet["data_cadastro"]:
+                                try:
+                                    if hasattr(pet["data_cadastro"], "date"):
+                                        data_formatada = pet["data_cadastro"].date().strftime("%d/%m/%Y")
+                                    else:
+                                        data_formatada = str(pet["data_cadastro"])[:10]
+                                except:
+                                    data_formatada = "Data não disponível"
+                                st.markdown(f"**📅 Cadastrado em:** {data_formatada}")
                         
-                        
-                        if pet['historia']:
-                            st.markdown("**📖 História do Pet:**")
-                            st.write(pet['historia'])
-                        
-                        if pet['saude']:
-                            st.markdown("**🏥 Saúde Geral:**")
-                            st.write(pet['saude'])
+                        coluna3, coluna4 = st.columns(2)
+                        with coluna3:
+                            if pet['historia']:
+                                st.markdown("**📖 História do Pet:**")
+                                st.write(pet['historia'])
+                        with coluna4:
+                            if pet['saude']:
+                                st.markdown("**🏥 Saúde Geral:**")
+                                st.write(pet['saude'])
                         
                         if pet['alimentacao']:
                             st.markdown("**🍽️ Alimentação:**")
@@ -334,7 +373,7 @@ if len(pets) > 0:
             st.switch_page("paginas/pets.py")
     
     with col2:
-        if st.button("💬 Conversar com Dr. Tobias", type="secondary", use_container_width=True):
+        if st.button("💬 Conversar com o Assistente", type="secondary", use_container_width=True):
             st.switch_page("paginas/chatbot.py")
     
     with col3:
@@ -346,7 +385,7 @@ if len(pets) > 0:
 # ============================================================================
 
 st.markdown("---")
-st.markdown("### 🩺 Sobre Dr. Tobias")
+st.markdown("### 🩺 Sobre o Assistente Virtual")
 
 col_info1, col_info2 = st.columns(2)
 
