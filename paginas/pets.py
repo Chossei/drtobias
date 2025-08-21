@@ -11,6 +11,41 @@ from paginas.funcoes import (
 from datetime import date
 
 # ============================================================================
+#  BLOCO DE ESTILO CSS PARA OS CARDS DOS PETS
+# ============================================================================
+st.markdown("""
+<style>
+    /* O seletor [data-testid="stVerticalBlockBorderWrapper"] é o que o Streamlit usa para o st.container(border=True) */
+    [data-testid="stVerticalBlockBorderWrapper"] {
+        background-color: #f8f9fa;  /* Cor de fundo do card, um cinza bem claro */
+        border-radius: 20px;       /* Bordas arredondadas */
+        border: 2px solid #e9ecef; /* Cor e espessura da borda */
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1); /* Sombra para dar profundidade */
+        transition: all 0.3s;      /* Animação suave para o hover */
+        padding: 15px;             /* Espaçamento interno */
+    }
+
+    /* Efeito de HOVER (quando o mouse passa por cima) */
+    [data-testid="stVerticalBlockBorderWrapper"]:hover {
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2); /* Sombra mais forte */
+        transform: scale(1.03);    /* Aumenta levemente o tamanho do card */
+        border-color: #4A90E2;      /* Muda a cor da borda para destacar */
+    }
+
+    /* Arredonda as bordas da imagem DENTRO do card para combinar */
+    [data-testid="stVerticalBlockBorderWrapper"] img {
+        border-radius: 15px;
+    }
+
+    /* Melhora o visual do botão primário dentro do card */
+    [data-testid="stVerticalBlockBorderWrapper"] .stButton > button[kind="primary"] {
+        background-color: #4A90E2;
+        border: 2px solid #4A90E2;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# ============================================================================
 # CONFIGURAÇÃO DA PÁGINA
 # ============================================================================
 
