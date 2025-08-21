@@ -32,7 +32,8 @@ styled_muted("<p>Bem-vindo ao seu assistente veterinário especializado! Aqui vo
 
 @st.dialog("📄 Adicionar Exame", width = "large")
 def dialog_adicionar_exame(pet_id, pet_nome):
-    st.markdown(f"### Adicionar exame para **{pet_nome}**")
+    # usar styled_section para título do diálogo
+    styled_section("📄 Adicionar Exame", f"Adicionar exame para {pet_nome}")
     
     with st.form("form_adicionar_exame"):
         nome_exame = st.text_input(
@@ -47,7 +48,7 @@ def dialog_adicionar_exame(pet_id, pet_nome):
         )
         
         if arquivo_pdf is not None:
-            st.info(f"📄 Arquivo selecionado: {arquivo_pdf.name}")
+            styled_muted(f"📄 <b>Arquivo selecionado:</b> {arquivo_pdf.name}")
         
         col1, col2 = st.columns(2)
         
@@ -70,8 +71,7 @@ def dialog_adicionar_exame(pet_id, pet_nome):
                                 
                                 # Encaminha as informações gerais do exame, tratadas pela IA, para o banco de dados
                                 resultado = relator(pet_id = pet_id, exame_doc_id = exame_id, pdf = arquivo_pdf)
-                                st.success(f"✅ Ótimo! Nosso assistente digital já estudou o exame de {pet_nome} e está pronto para conversar sobre os resultados.",
-                                    width="stretch")
+                                st.success("✅ Ótimo! Nosso assistente digital já estudou o exame e está pronto para conversar sobre os resultados.", width="stretch")
                             else:
                                 st.error("❌ Erro ao salvar exame no banco de dados.")
                         else:
@@ -82,7 +82,6 @@ def dialog_adicionar_exame(pet_id, pet_nome):
                     import time
                     time.sleep(5)
                     st.rerun()
-                    
         
         with col2:
             if st.form_submit_button("❌ Cancelar", use_container_width=True):
@@ -93,8 +92,8 @@ def dialog_adicionar_exame(pet_id, pet_nome):
 # ============================================================================
 @st.dialog("🩺 Motivo da Consulta", width = "stretch")
 def dialog_motivo_consulta(pet):
-    st.markdown(f"### Adicione o principal motivo da consulta para {pet['nome']}")
-
+    # título via styled_section
+    styled_section("🩺 Motivo da Consulta", f"Adicione o principal motivo da consulta para {pet.get('nome', 'o pet')}")
     with st.form("motivo_da_consulta"):
         motivo = st.text_area(
             label = "Qual o motivo da consulta? *",
@@ -121,32 +120,29 @@ def dialog_motivo_consulta(pet):
                     st.success("✅ Relatório gerado com sucesso! Clique abaixo para baixar.")
                     condicao = True
     
-    if condicao==True:
+    if condicao:
         st.download_button(
-                        label= "🗂️ Baixar relatório agora", data = data,
-                        file_name= f"relatorio_completo_{pet['nome']}.pdf",
-                        mime = "application/pdf",
-                        use_container_width=True,
-                        type="primary"
-                    )
-
-
-
-        
+            label= "🗂️ Baixar relatório agora", data = data,
+            file_name= f"relatorio_completo_{pet.get('nome','pet')}.pdf",
+            mime = "application/pdf",
+            use_container_width=True
+        )
 
 # ============================================================================
 # WELCOME MESSAGE
 # ============================================================================
 
-# Informações do usuário
+# Informações do usuário, usando helpers
 if hasattr(st.user, 'name') and st.user.name:
-    st.markdown(f"### Olá, **{st.user.name}**! 👋")
+    # mostragem mais discreta com styled_section (título pequeno)
+    styled_section(f"Olá, **{st.user.name}**! 👋")
 else:
-    st.markdown("### Olá! 👋")
+    styled_section("Olá! 👋")
 
 # ============================================================================
-#  BLOCO DE ESTILO CSS PARA OS CARDS DOS PETS
+#  BLOCO DE ESTILO CSS PARA OS CARDS DOS PETS (mantive como estava)
 # ============================================================================
+
 st.markdown("""
 <style>
     /* O seletor [data-testid="stVerticalBlockBorderWrapper"] é o que o Streamlit usa para o st.container(border=True) */
@@ -186,7 +182,8 @@ st.markdown("""
 pets = obter_pets()
 
 if len(pets) > 0: 
-    st.subheader(f"🐾 Seus Pets ({len(pets)})")
+    # seção com helper
+    styled_section(f"🐾 Seus Pets ({len(pets)})")
     
     # Organiza pets em grupos de 3 para as colunas
     for i in range(0, len(pets), 3):
@@ -198,25 +195,24 @@ if len(pets) > 0:
                 # Container do pet com borda
                 with st.container(border=True):
                     # Foto do pet centralizada
-                    if pet["url_foto"]:
-                        st.image(pet["url_foto"], use_container_width=True)
+                    if pet.get("url_foto"):
+                        st.image(pet.get("url_foto"), use_container_width=True)
                     else:
                         st.markdown("🐾", help="Sem foto")
                     
-                    # Nome do pet
-                    st.markdown(f"### {pet['nome']}")
+                    # Nome do pet (inline title)
+                    inline_title(f"{pet.get('nome','Pet sem nome')}")
                     
-                    # Informações básicas essenciais
-                    st.markdown(f"**{pet['especie']}** • **{pet['raca']}**")
-                    st.markdown(f"**{pet['sexo']}** • **{pet['idade']}**")
+                    # Informações básicas essenciais (usando styled_muted pra padronizar)
+                    styled_muted(f"<b>{pet.get('especie','Não informada')}</b> • <b>{pet.get('raca','Não informada')}</b>")
+                    styled_muted(f"<b>{pet.get('sexo','Não informado')}</b> • <b>{pet.get('idade','Não informado')}</b>")
                     
                     # Contador de exames
-                    exames_count = len(obter_exames_pet(pet['id']))
+                    exames_count = len(obter_exames_pet(pet.get('id')))
                     if exames_count > 0:
-                        st.markdown(f"📋 **{exames_count}** exame(s) cadastrado(s)")
+                        styled_muted(f"📋 <b>{exames_count}</b> exame(s) cadastrado(s)")
                     else:
-                        st.markdown("📋 Nenhum exame cadastrado")
-                    
+                        styled_muted("📋 Nenhum exame cadastrado")
                     
                     # Informações detalhadas agrupadas em "Saber mais"
                     with st.expander("ℹ️ Saber mais", expanded=False):
@@ -224,70 +220,72 @@ if len(pets) > 0:
                         coluna1, coluna2 = st.columns(2)
                         with coluna1:
                             # Informações de castração
-                            if pet['castrado'] == "Sim":
+                            castrado_val = pet.get('castrado', "Não sei")
+                            if castrado_val == "Sim":
                                 castrado_icon = "✅"
-                            elif pet['castrado'] == "Não":
+                            elif castrado_val == "Não":
                                 castrado_icon = "❌"
-                            elif pet['castrado'] == "Não sei":
+                            elif castrado_val == "Não sei":
                                 castrado_icon = "❓"
                             else:
-                                # Para pets antigos que podem ter valor boolean
-                                castrado_icon = "✅" if pet['castrado'] else "❌"
-                            st.markdown(f"**🔸 Castrado:** {castrado_icon} {pet['castrado']}")
+                                castrado_icon = "✅" if castrado_val else "❌"
+                            styled_muted(f"🔸 <b>Castrado:</b> {castrado_icon} {castrado_val}")
                         
                         with coluna2:
                             # Data de cadastro
-                            if pet["data_cadastro"]:
+                            data_cad = pet.get("data_cadastro")
+                            if data_cad:
                                 try:
-                                    if hasattr(pet["data_cadastro"], "date"):
-                                        data_formatada = pet["data_cadastro"].date().strftime("%d/%m/%Y")
+                                    if hasattr(data_cad, "date"):
+                                        data_formatada = data_cad.date().strftime("%d/%m/%Y")
                                     else:
-                                        data_formatada = str(pet["data_cadastro"])[:10]
+                                        data_formatada = str(data_cad)[:10]
                                 except:
                                     data_formatada = "Data não disponível"
-                                st.markdown(f"**📅 Cadastrado em:** {data_formatada}")
+                                styled_muted(f"📅 <b>Cadastrado em:</b> {data_formatada}")
                         
                         coluna3, coluna4 = st.columns(2)
                         with coluna3:
-                            if pet['historia']:
-                                st.markdown("**📖 História do Pet:**")
-                                st.write(pet['historia'])
+                            if pet.get('historia'):
+                                inline_title("📖 História do Pet:")
+                                st.write(pet.get('historia'))
                         with coluna4:
-                            if pet['saude']:
-                                st.markdown("**🏥 Saúde Geral:**")
-                                st.write(pet['saude'])
+                            if pet.get('saude'):
+                                inline_title("🏥 Saúde Geral:")
+                                st.write(pet.get('saude'))
                         
-                        if pet['alimentacao']:
-                            st.markdown("**🍽️ Alimentação:**")
-                            st.write(pet['alimentacao'])
+                        if pet.get('alimentacao'):
+                            inline_title("🍽️ Alimentação:")
+                            st.write(pet.get('alimentacao'))
                         
                         # Seção de exames
-                        exames = obter_exames_pet(pet['id'])
+                        exames = obter_exames_pet(pet.get('id'))
                         if exames:
                             st.markdown("---")
-                            st.markdown(f"**📋 Exames ({len(exames)}):**")
+                            inline_title(f"📋 Exames ({len(exames)}):")
                             
-                            for idx, exame in enumerate(exames, 1):
+                            for idx_exame, exame in enumerate(exames, 1):
                                 # Data do exame formatada
-                                if exame["data_upload"]:
+                                data_upload = exame.get("data_upload")
+                                if data_upload:
                                     try:
-                                        if hasattr(exame["data_upload"], "date"):
-                                            data_exame = exame["data_upload"].date().strftime("%d/%m/%Y")
-                                            hora_exame = exame["data_upload"].strftime("%H:%M")
+                                        if hasattr(data_upload, "date"):
+                                            data_exame = data_upload.date().strftime("%d/%m/%Y")
+                                            hora_exame = data_upload.strftime("%H:%M")
                                             data_completa = f"{data_exame} às {hora_exame}"
                                         else:
-                                            data_completa = str(exame["data_upload"])[:19].replace("T", " às ")
+                                            data_completa = str(data_upload)[:19].replace("T", " às ")
                                     except:
                                         data_completa = "Data não disponível"
                                 else:
                                     data_completa = "Data não disponível"
                                 
                                 # Exibe informações detalhadas do exame
-                                st.markdown(f"**{idx}. {exame['nome_exame']}**")
-                                st.markdown(f"   📅 **Enviado em:** {data_completa}")
+                                inline_title(f"{idx_exame}. {exame.get('nome_exame','Exame')}")
+                                styled_muted(f"📅 <b>Enviado em:</b> {data_completa}")
                                 
                                 # Determina o tipo de exame baseado no nome
-                                nome_lower = exame['nome_exame'].lower()
+                                nome_lower = exame.get('nome_exame','').lower()
                                 if any(palavra in nome_lower for palavra in ['sangue', 'hemograma', 'bioquimic']):
                                     tipo_exame = "🩸 Exame de Sangue"
                                 elif any(palavra in nome_lower for palavra in ['raio', 'radiograf', 'rx']):
@@ -305,23 +303,22 @@ if len(pets) > 0:
                                 else:
                                     tipo_exame = "📋 Exame Geral"
                                 
-                                st.markdown(f"   🏷️ **Tipo:** {tipo_exame}")
+                                styled_muted(f"🏷️ <b>Tipo:</b> {tipo_exame}")
                                 
-                                if exame['url_pdf']:
-                                    st.markdown(f"   [📄 Baixar PDF do Exame]({exame['url_pdf']})")
-                                
-                                if idx < len(exames):  # Não adiciona divisor após o último exame
-                                    st.markdown("")
+                                if exame.get('url_pdf'):
+                                    st.markdown(f"[📄 Baixar PDF do Exame]({exame.get('url_pdf')})")
+                                # espaçamento discreto
+                                st.markdown("")
                         else:
                             st.markdown("---")
-                            st.markdown("**📋 Exames:** Nenhum exame cadastrado")
+                            styled_muted("📋 Nenhum exame cadastrado")
                     
                     # Botões de ação divididos em 2 colunas
                     col_btn1, col_btn2 = st.columns(2)
                     
                     with col_btn1:
                         # Botão de gerar relatório
-                        exames_pet = obter_exames_pet(pet['id'])
+                        exames_pet = obter_exames_pet(pet.get('id'))
                         num_exames = len(exames_pet)
                         
                         if num_exames > 0:
@@ -332,38 +329,27 @@ if len(pets) > 0:
                             label_texto = "📄 Gerar Relatório"
                         
                         # Caixa de diálogo para baixar 
-                        if st.button(label = label_texto, help = help_text, use_container_width=True,
-                            type = "primary"):
+                        if st.button(label = label_texto, help = help_text, use_container_width=True, type = "primary"):
                             dialog_motivo_consulta(pet)
 
-                        # # Botão de download direto
-                        # st.download_button(
-                        #     label=label_texto,
-                        #     data=gerar_relatorio_pet_pdf(pet, motivo_consulta = motivo),
-                        #     file_name=f"relatorio_completo_{pet['nome']}.pdf",
-                        #     mime="application/pdf",
-                        #     help=help_text,
-                        #     use_container_width=True,
-                        #     type="primary"
-                        # )
-                    
                     with col_btn2:
                         # Botão de adicionar exame
                         if st.button(
                             "📋 Adicionar Exame",
-                            key=f"add_exame_{pet['id']}",
+                            key=f"add_exame_{pet.get('id')}",
                             help="Adicionar exame em PDF",
                             use_container_width=True,
                             type="secondary"
                         ):
-                            dialog_adicionar_exame(pet['id'], pet['nome'])
+                            dialog_adicionar_exame(pet.get('id'), pet.get('nome'))
+
 else:
     # Mensagem quando não há pets cadastrados
-    st.info("🐾 **Você ainda não cadastrou nenhum pet!**")
+    styled_info("🐾 <b>Você ainda não cadastrou nenhum pet!</b>")
     
     col_info1, col_info2, col_info3 = st.columns([1, 2, 1])
     with col_info2:
-        st.markdown("### 🎯 Para começar:")
+        inline_title("🎯 Para começar:")
         st.markdown("1. **Clique em 'Cadastro de Pets'** no menu lateral")
         st.markdown("2. **Preencha as informações** do seu bichinho")  
         st.markdown("3. **Volte aqui** para ver todos os seus pets")
@@ -375,7 +361,7 @@ else:
 
 if len(pets) > 0:
     st.markdown("---")
-    st.subheader("🎯 Ações Rápidas")
+    styled_section("🎯 Ações Rápidas")
     
     col1, col2, col3 = st.columns(3)
     
@@ -396,22 +382,22 @@ if len(pets) > 0:
 # ============================================================================
 
 st.markdown("---")
-st.markdown("### 🩺 Sobre o Assistente Virtual")
+styled_section("🩺 Sobre o Assistente Virtual")
 
 col_info1, col_info2 = st.columns(2)
 
 with col_info1:
-    st.markdown("**🤖 Assistente Inteligente:**")
+    inline_title("🤖 Assistente Inteligente:")
     st.markdown("• Especialista em cuidados com pets")
     st.markdown("• Conhecimento sobre diferentes espécies")
     st.markdown("• Conselhos personalizados baseados no seu pet")
     st.markdown("• Disponível 24/7 para tirar suas dúvidas")
 
 with col_info2:
-    st.markdown("**💡 Como usar:**")
+    inline_title("💡 Como usar:")
     st.markdown("• Cadastre todos os seus pets com detalhes")
     st.markdown("• Acesse o chat e mencione o nome do seu pet")
     st.markdown("• Faça perguntas específicas sobre comportamento, saúde, alimentação")
     st.markdown("• Receba orientações profissionais personalizadas")
 
-st.info("🎯 **Dica:** Quanto mais informações você fornecer sobre seus pets, mais preciso nosso assistente virtual será em suas recomendações! 🐾")
+styled_info("🎯 <b>Dica:</b> Quanto mais informações você fornecer sobre seus pets, mais preciso nosso assistente virtual será em suas recomendações! 🐾")
