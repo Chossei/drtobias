@@ -44,7 +44,7 @@ if nome_usuario and ' ' in nome_usuario:
 # Verifica e exibe a mensagem de boas-vindas no primeiro login
 if st.session_state.get('show_welcome_message', False):
     with st.popover("Bem-vindo! 🐾", use_container_width=True):
-        st.markdown(f"Olá, **{nome_usuario}**! Sou Dr. Tobias, seu assistente veterinário virtual!")
+        st.markdown(f"Olá, **{nome_usuario}**! Sou seu assistente veterinário virtual!")
         st.markdown("Estou aqui para te ajudar com questões sobre pets, comportamento animal e cuidados básicos. Pode me contar tudo sobre seus bichinhos! 🐾")
         st.button("Vamos conversar!", use_container_width=True, key="welcome_close")
     # Remove o flag para não mostrar novamente
@@ -67,9 +67,9 @@ def obter_avatar_usuario():
 def obter_mensagem_inicial():
     """Gera mensagem inicial personalizada com base no perfil do usuário"""
     mensagens_iniciais = [
-        f"Oi {nome_usuario}! 🐾 Sou Dr. Tobias, seu assistente veterinário. Como estão seus pets hoje?",
+        f"Oi {nome_usuario}! 🐾 Sou seu assistente veterinário. Como estão seus pets hoje?",
         f"Olá {nome_usuario}! ✨ Que bom te ver aqui! Em que posso ajudar você e seus bichinhos?",
-        f"Oi {nome_usuario}! 🐕 Sou Dr. Tobias e estou aqui para ajudar. Me conta sobre seus pets!",
+        f"Oi {nome_usuario}! 🐕  Estou aqui para ajudar. Me conta sobre seus pets!",
         f"Olá {nome_usuario}! 🐱 Seu assistente veterinário está aqui! Quer conversar sobre comportamento, saúde ou cuidados com pets?"
     ]
     import random
