@@ -41,7 +41,7 @@ def editar_pet_dialog():
                                      options=["Cachorro", "Gato", "Pássaro", "Coelho", "Hamster", "Peixe", "Réptil", "Outro"],
                                      index=["Cachorro", "Gato", "Pássaro", "Coelho", "Hamster", "Peixe", "Réptil", "Outro"].index(pet['especie']) if pet['especie'] in ["Cachorro", "Gato", "Pássaro", "Coelho", "Hamster", "Peixe", "Réptil", "Outro"] else 0)
             raca_pet = st.text_input("Raça *", value=pet['raca'])
-            peso_pet = st.number_input("Peso (em kg)", value=pet['peso'], min_value = 0.00, max_value=1000.00,
+            peso_pet = st.number_input("Peso (em kg)", value=0.00, min_value = 0.00, max_value=1000.00,
             step = 0.10)
             historia_pet = st.text_area("História do Pet", value=pet.get('historia', ''), height=100)
         
@@ -53,7 +53,7 @@ def editar_pet_dialog():
             castrado_pet = st.selectbox("Pet castrado? *", 
                                       options=["Sim", "Não", "Não sei"],
                                       index=["Sim", "Não", "Não sei"].index(pet['castrado']) if pet['castrado'] in ["Sim", "Não", "Não sei"] else 0)
-            altura_pet = st.number_input("Altura (em cm)", value = pet['altura'], min_value=0, max_value=300, step=1)
+            altura_pet = st.number_input("Altura (em cm)", value = 0, min_value=0, max_value=300, step=1)
             saude_pet = st.text_area("Saúde Geral do Pet", value=pet.get('saude', ''), height=100)
         
         alimentacao_pet = st.text_area("Alimentação", value=pet.get('alimentacao', ''), height=100)
