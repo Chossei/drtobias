@@ -1,4 +1,4 @@
-import streamlit as streamlit
+import streamlit as st
 
 def _inject_dt_styles():
     st.markdown("""
