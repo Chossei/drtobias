@@ -174,6 +174,7 @@ if len(pets) > 0:
                     
                     # Informações detalhadas agrupadas em "Saber mais"
                     with st.expander("ℹ️ Saber mais", expanded=False):
+                        st.divider()
                         # Estrutura de coluna
                         coluna1, coluna2 = st.columns(2)
                         with coluna1:
