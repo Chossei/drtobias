@@ -12,8 +12,19 @@ from paginas.agentes_funcoes import (
     relator
 )
 
-st.title("🏠 Pelunos - Página Inicial")
-st.markdown("*Bem-vindo ao seu assistente veterinário especializado! Aqui você pode acompanhar seus pets e acessar todas as funcionalidades.*")
+from paginas.estilizacao import (
+    _inject_dt_styles,
+    styled_title,
+    styled_section,
+    styled_info,
+    styled_muted,
+    inline_title
+)
+
+_inject_dt_styles()
+
+styled_title("🏠 Pelunos - Página Inicial")
+styled_muted("<p>Bem-vindo ao seu assistente veterinário especializado! Aqui você pode acompanhar seus pets e acessar todas as funcionalidades.</p>")
 
 # ============================================================================
 # DIÁLOGO PARA ADICIONAR EXAME
@@ -403,4 +414,4 @@ with col_info2:
     st.markdown("• Faça perguntas específicas sobre comportamento, saúde, alimentação")
     st.markdown("• Receba orientações profissionais personalizadas")
 
-st.info("🎯 **Dica:** Quanto mais informações você fornecer sobre seus pets, mais preciso Dr. Tobias será em suas recomendações! 🐾")
+st.info("🎯 **Dica:** Quanto mais informações você fornecer sobre seus pets, mais preciso nosso assistente virtual será em suas recomendações! 🐾")
