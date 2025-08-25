@@ -7,7 +7,7 @@ inicializar_firebase()
 
 st.set_page_config(
     page_title="Pelunos - Seu Pet Mais Saudável",  
-    page_icon="arquivos/avatar_assistente.jpg", 
+    page_icon="arquivos/avatar_assistente.png", 
     layout='wide',                       
     initial_sidebar_state="expanded"
 )
@@ -20,7 +20,7 @@ if not hasattr(st.user, 'is_logged_in') or not st.user.is_logged_in:
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         # Logo centralizada
-        st.image('arquivos/capa.jpg', width=200, use_container_width=True)
+        st.image('arquivos/capa.png', width=200, use_container_width=True)
         st.title("🐾 Pelunos - Seu Pet Mais Saudável 🐾") 
         st.markdown("Faça login com sua conta Google para conversar com seu veterinário especialista em pets.")
         # Botão de login
@@ -46,7 +46,7 @@ if not hasattr(st.user, 'is_logged_in') or not st.user.is_logged_in:
  
 else:
     # Logo
-    st.logo('arquivos/avatar_assistente.jpg')
+    st.logo('arquivos/avatar_assistente.png')
 
     # Garante que o usuário está registrado/atualizado no Firestore ANTES de obter o perfil
     login_usuario() # ADICIONADO AQUI

@@ -77,7 +77,7 @@ def obter_mensagem_inicial():
 
 # Define os avatars
 avatar_user = obter_avatar_usuario()
-avatar_assistant = 'arquivos/avatar_assistente.jpg'
+avatar_assistant = 'arquivos/avatar_assistente.png'
 
 MENSAGEM_INICIAL = obter_mensagem_inicial()
 
