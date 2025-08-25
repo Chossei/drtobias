@@ -739,7 +739,7 @@ def gerar_relatorio_pet_pdf(pet_data, motivo_consulta=""):
     story = []
     
     # Título principal
-    story.append(Paragraph("RELATÓRIO VETERINÁRIO - DR. TOBIAS", titulo_style))
+    story.append(Paragraph("RELATÓRIO VETERINÁRIO - PELUNOS", titulo_style))
     story.append(Spacer(1, 20))
     
     # Data do relatório
@@ -790,7 +790,7 @@ def gerar_relatorio_pet_pdf(pet_data, motivo_consulta=""):
                         data_cadastro = str(pet_data["data_cadastro"])[:10]
                 except:
                     data_cadastro = "Não disponível"
-                dados_basicos.append(['Data de Cadastro:', data_cadastro])
+                dados_basicos.append(['Cadastro:', data_cadastro])
             
             # Cria tabela de informações básicas
             tabela_info = Table(dados_basicos, colWidths=[1.2*inch, 2.3*inch])
@@ -839,7 +839,7 @@ def gerar_relatorio_pet_pdf(pet_data, motivo_consulta=""):
                         data_cadastro = str(pet_data["data_cadastro"])[:10]
                 except:
                     data_cadastro = "Não disponível"
-                dados_basicos.append(['Data de Cadastro:', data_cadastro])
+                dados_basicos.append(['Cadastro:', data_cadastro])
             
             tabela_basicos = Table(dados_basicos, colWidths=[2*inch, 4*inch])
             tabela_basicos.setStyle(TableStyle([
@@ -875,7 +875,7 @@ def gerar_relatorio_pet_pdf(pet_data, motivo_consulta=""):
                     data_cadastro = str(pet_data["data_cadastro"])[:10]
             except:
                 data_cadastro = "Não disponível"
-            dados_basicos.append(['Data de Cadastro:', data_cadastro])
+            dados_basicos.append(['Cadastro:', data_cadastro])
         
         tabela_basicos = Table(dados_basicos, colWidths=[2*inch, 4*inch])
         tabela_basicos.setStyle(TableStyle([
@@ -994,11 +994,11 @@ def gerar_relatorio_pet_pdf(pet_data, motivo_consulta=""):
     story.append(Spacer(1, 20))
     story.append(Paragraph("OBSERVAÇÕES", subtitulo_style))
     observacoes_text = """
-    Este relatório foi gerado automaticamente através do sistema Dr. Tobias com base nas informações 
+    Este relatório foi gerado automaticamente através do sistema Pelunos com base nas informações 
     fornecidas pelo tutor do animal. As informações aqui contidas são declarações do responsável pelo pet 
     e devem ser validadas durante a consulta veterinária.
     
-    Para mais informações ou atualizações nos dados do pet, o tutor pode acessar o sistema Dr. Tobias.
+    Para mais informações ou atualizações nos dados do pet, o tutor pode acessar o sistema Pelunos.
     """
     story.append(Paragraph(observacoes_text, styles['Normal']))
     
@@ -1011,7 +1011,7 @@ def gerar_relatorio_pet_pdf(pet_data, motivo_consulta=""):
         textColor=colors.grey,
         alignment=1  # Centralizado
     )
-    story.append(Paragraph("Dr. Tobias - Assistente Veterinário Digital", rodape_style))
+    story.append(Paragraph("Pelunos - Assistente Veterinário Digital", rodape_style))
     
     # Gera o PDF do relatório principal
     doc.build(story)
