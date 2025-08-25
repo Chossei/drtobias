@@ -739,7 +739,7 @@ def gerar_relatorio_pet_pdf(pet_data, motivo_consulta=""):
     story = []
     
     # Título principal
-    story.append(Paragraph("🐾 RELATÓRIO VETERINÁRIO - DR. TOBIAS", titulo_style))
+    story.append(Paragraph("RELATÓRIO VETERINÁRIO - DR. TOBIAS", titulo_style))
     story.append(Spacer(1, 20))
     
     # Data do relatório
@@ -812,14 +812,14 @@ def gerar_relatorio_pet_pdf(pet_data, motivo_consulta=""):
             ]))
             
             # Adiciona título da seção
-            story.append(Paragraph("📋 INFORMAÇÕES BÁSICAS", subtitulo_style))
+            story.append(Paragraph("INFORMAÇÕES BÁSICAS", subtitulo_style))
             story.append(layout_principal)
             story.append(Spacer(1, 20))
             
         except Exception as e:
             print(f"Erro ao adicionar foto do pet ao PDF: {e}")
             # Se houver erro, usa o layout original sem foto
-            story.append(Paragraph("📋 INFORMAÇÕES BÁSICAS", subtitulo_style))
+            story.append(Paragraph("INFORMAÇÕES BÁSICAS", subtitulo_style))
             
             dados_basicos = [
                 ['Nome:', pet_data.get('nome', 'Não informado')],
@@ -855,7 +855,7 @@ def gerar_relatorio_pet_pdf(pet_data, motivo_consulta=""):
             story.append(Spacer(1, 20))
     else:
         # Se não há foto, usa layout original
-        story.append(Paragraph("📋 INFORMAÇÕES BÁSICAS", subtitulo_style))
+        story.append(Paragraph("INFORMAÇÕES BÁSICAS", subtitulo_style))
         
         dados_basicos = [
             ['Nome:', pet_data.get('nome', 'Não informado')],
@@ -892,32 +892,32 @@ def gerar_relatorio_pet_pdf(pet_data, motivo_consulta=""):
     
     # História do Pet
     if pet_data.get('historia'):
-        story.append(Paragraph("📖 HISTÓRIA DO PET", subtitulo_style))
+        story.append(Paragraph("HISTÓRIA DO PET", subtitulo_style))
         story.append(Paragraph(pet_data['historia'], styles['Normal']))
         story.append(Spacer(1, 15))
     
     # Informações de Saúde
     if pet_data.get('saude'):
-        story.append(Paragraph("🏥 SAÚDE GERAL", subtitulo_style))
+        story.append(Paragraph("SAÚDE GERAL", subtitulo_style))
         story.append(Paragraph(pet_data['saude'], styles['Normal']))
         story.append(Spacer(1, 15))
     
     # Informações de Alimentação
     if pet_data.get('alimentacao'):
-        story.append(Paragraph("🍽️ ALIMENTAÇÃO", subtitulo_style))
+        story.append(Paragraph("ALIMENTAÇÃO", subtitulo_style))
         story.append(Paragraph(pet_data['alimentacao'], styles['Normal']))
         story.append(Spacer(1, 15))
     
     # Motivo da consulta de acordo com o relato do tutor 
     if len(motivo_consulta) > 1:
-        story.append(Paragraph("🍽️ MOTIVO DA CONSULTA SEGUNDO O TUTOR", subtitulo_style))
+        story.append(Paragraph("MOTIVO DA CONSULTA SEGUNDO O TUTOR", subtitulo_style))
         story.append(Paragraph(motivo_consulta, styles['Normal']))
         story.append(Spacer(1, 15))
 
     # Seção de Exames
     exames = obter_exames_pet(pet_data.get('id'))
     if exames:
-        story.append(Paragraph(f"📋 EXAMES ({len(exames)})", subtitulo_style))
+        story.append(Paragraph(f"EXAMES ({len(exames)})", subtitulo_style))
         
         # Cria tabela de exames
         dados_exames = [['#', 'Nome do Exame', 'Tipo', 'Data de Upload', 'Link PDF']]
@@ -992,7 +992,7 @@ def gerar_relatorio_pet_pdf(pet_data, motivo_consulta=""):
     
     # Observações para o veterinário
     story.append(Spacer(1, 20))
-    story.append(Paragraph("📝 OBSERVAÇÕES", subtitulo_style))
+    story.append(Paragraph("OBSERVAÇÕES", subtitulo_style))
     observacoes_text = """
     Este relatório foi gerado automaticamente através do sistema Dr. Tobias com base nas informações 
     fornecidas pelo tutor do animal. As informações aqui contidas são declarações do responsável pelo pet 
@@ -1065,7 +1065,7 @@ def gerar_relatorio_pet_pdf(pet_data, motivo_consulta=""):
                 
                 separador_story = []
                 separador_story.append(Spacer(1, 2*inch))
-                separador_story.append(Paragraph(f"📋 EXAME {idx}: {exame['nome_exame']}", separador_title_style))
+                separador_story.append(Paragraph(f"EXAME {idx}: {exame['nome_exame']}", separador_title_style))
                 
                 # Data do exame
                 if exame["data_upload"]:
