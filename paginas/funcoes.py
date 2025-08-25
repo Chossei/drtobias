@@ -956,8 +956,8 @@ def gerar_relatorio_pet_pdf(pet_data, motivo_consulta=""):
             
             # URL do PDF (truncada para caber na tabela)
             url_exame = exame.get('url_pdf', 'N/A')
-            if len(url_exame) > 40:
-                url_exame = url_exame[:40] + "..."
+            if len(url_exame) > 20:
+                url_exame = url_exame[:20] + "..."
             
             dados_exames.append([
                 str(idx),
