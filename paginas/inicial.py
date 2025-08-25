@@ -285,9 +285,10 @@ if len(pets) > 0:
                         else:
                             help_text = "Baixar relatório veterinário"
                             label_texto = "📄 Gerar Relatório"
-                        
+
+                        chave_unica = f"btn_gerar_relatorio_{pet['nome']}"
                         # Caixa de diálogo para baixar 
-                        if st.button(label = label_texto, help = help_text, use_container_width=True,
+                        if st.button(label = label_texto, key=chave_unica, help = help_text, use_container_width=True,
                             type = "primary"):
                             dialog_motivo_consulta(pet)
 
