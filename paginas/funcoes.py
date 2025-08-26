@@ -990,6 +990,92 @@ def gerar_relatorio_pet_pdf(pet_data, motivo_consulta=""):
         story.append(Paragraph(nota_exames, styles['Normal']))
         story.append(Spacer(1, 15))
     
+    # Seção de Acontecimentos
+    acontecimentos = obter_acontecimentos_pet(pet_data.get('id'))
+    if acontecimentos:
+        story.append(Paragraph(f"ACONTECIMENTOS ({len(acontecimentos)})", subtitulo_style))
+        
+        for idx, acontecimento in enumerate(acontecimentos, 1):
+            # Data formatada do acontecimento
+            if acontecimento.get("data_hora"):
+                try:
+                    if hasattr(acontecimento["data_hora"], "strftime"):
+                        data_acontecimento = acontecimento["data_hora"].strftime("%d/%m/%Y")
+                        hora_acontecimento = acontecimento["data_hora"].strftime("%H:%M")
+                        data_completa = f"{data_acontecimento} às {hora_acontecimento}"
+                    else:
+                        data_completa = str(acontecimento["data_hora"])[:19].replace("T", " às ")
+                except:
+                    data_completa = "Data não disponível"
+            else:
+                data_completa = "Data não disponível"
+            
+            # Prepara as informações do acontecimento
+            dados_acontecimento = [
+                [f'{idx}. Data/Hora:', data_completa],
+                ['Descrição:', acontecimento.get('descricao', 'Sem descrição')]
+            ]
+            
+            # Cria tabela de informações do acontecimento
+            tabela_info_acontecimento = Table(dados_acontecimento, colWidths=[1.2*inch, 3.3*inch])
+            tabela_info_acontecimento.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#E8F5E8')),
+                ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+                ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
+                ('FONTSIZE', (0, 0), (-1, -1), 9),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+                ('WORDWRAP', (0, 0), (-1, -1), True),
+            ]))
+            
+            # Foto do acontecimento (se houver)
+            if acontecimento.get('url_foto'):
+                try:
+                    # Baixa a imagem do Firebase Storage
+                    response = requests.get(acontecimento['url_foto'], timeout=30)
+                    response.raise_for_status()
+                    
+                    # Cria um objeto de imagem PIL para redimensionar
+                    img_pil = Image.open(io.BytesIO(response.content))
+                    
+                    # Redimensiona a imagem mantendo proporção (máx 80x80px para layout lado a lado)
+                    img_pil.thumbnail((80, 80), Image.Resampling.LANCZOS)
+                    
+                    # Converte para formato que o ReportLab pode usar
+                    img_buffer = io.BytesIO()
+                    img_pil.save(img_buffer, format='PNG')
+                    img_buffer.seek(0)
+                    
+                    # Adiciona a imagem ao PDF
+                    img_width, img_height = img_pil.size
+                    
+                    # Cria a imagem para o ReportLab
+                    acontecimento_image = ReportLabImage(img_buffer, width=img_width, height=img_height)
+                    
+                    # Cria layout lado a lado: foto à esquerda, informações à direita
+                    layout_acontecimento = Table([[acontecimento_image, tabela_info_acontecimento]], colWidths=[1.5*inch, 4.5*inch])
+                    layout_acontecimento.setStyle(TableStyle([
+                        ('ALIGN', (0, 0), (0, 0), 'CENTER'),    # Foto centralizada
+                        ('ALIGN', (1, 0), (1, 0), 'LEFT'),      # Tabela alinhada à esquerda
+                        ('VALIGN', (0, 0), (-1, -1), 'TOP'),    # Alinhamento vertical no topo
+                    ]))
+                    
+                    story.append(layout_acontecimento)
+                    
+                except Exception as e:
+                    print(f"Erro ao adicionar foto do acontecimento ao PDF: {e}")
+                    # Se houver erro com a foto, usa apenas a tabela de informações
+                    story.append(tabela_info_acontecimento)
+            else:
+                # Se não há foto, usa apenas a tabela de informações
+                story.append(tabela_info_acontecimento)
+            
+            # Espaço entre acontecimentos
+            if idx < len(acontecimentos):
+                story.append(Spacer(1, 10))
+        
+        story.append(Spacer(1, 15))
+    
     # Observações para o veterinário
     story.append(Spacer(1, 20))
     story.append(Paragraph("OBSERVAÇÕES", subtitulo_style))
@@ -1341,3 +1427,143 @@ def obter_info_exames(pets):
             texto += f"  Não foi possível obter os exames de {pet.get('nome', 'ID desconhecido')}.\n\n"
     
     return texto
+
+def salvar_acontecimento_pet(pet_id, data_hora, descricao, url_foto=None):
+    """
+    Salva um acontecimento do pet no Firestore.
+    
+    Args:
+        pet_id: ID do pet
+        data_hora: Data e hora do acontecimento
+        descricao: Descrição do acontecimento
+        url_foto: URL da foto no Firebase Storage (opcional)
+        
+    Returns:
+        str: ID do documento de acontecimento criado ou None se falhou
+    """
+    if not hasattr(st.user, 'email'):
+        return None
+        
+    db = firestore.client()
+    acontecimentos_ref = db.collection(COLECAO_USUARIOS).document(st.user.email).collection("pets").document(pet_id).collection("acontecimentos")
+    
+    try:
+        dados_acontecimento = {
+            "data_hora": data_hora,
+            "descricao": descricao,
+            "url_foto": url_foto or "",
+            "timestamp": datetime.now(),
+            "data_atualizacao": datetime.now()
+        }
+        
+        print(f"Salvando acontecimento com dados: {dados_acontecimento}")
+        doc_ref = acontecimentos_ref.add(dados_acontecimento)
+        return doc_ref[1].id  # Retorna o ID do documento criado
+    except Exception as e:
+        print(f"Erro ao salvar acontecimento: {e}")
+        return None
+
+def obter_acontecimentos_pet(pet_id):
+    """
+    Obtém a lista de acontecimentos de um pet específico.
+    
+    Args:
+        pet_id: ID do pet
+        
+    Returns:
+        list: Lista de dicionários com dados dos acontecimentos
+    """
+    if not hasattr(st.user, 'email'):
+        return []
+        
+    db = firestore.client()
+    acontecimentos_ref = db.collection(COLECAO_USUARIOS).document(st.user.email).collection("pets").document(pet_id).collection("acontecimentos")
+    
+    try:
+        docs = acontecimentos_ref.order_by("data_hora", direction=firestore.Query.DESCENDING).get()
+        acontecimentos = []
+        
+        for doc in docs:
+            acontecimento_data = doc.to_dict()
+            acontecimento_dict = {
+                "id": doc.id,
+                "data_hora": acontecimento_data.get("data_hora"),
+                "descricao": acontecimento_data.get("descricao", "Acontecimento sem descrição"),
+                "url_foto": acontecimento_data.get("url_foto", ""),
+                "timestamp": acontecimento_data.get("timestamp"),
+                "data_atualizacao": acontecimento_data.get("data_atualizacao")
+            }
+            acontecimentos.append(acontecimento_dict)
+            
+        return acontecimentos
+    except Exception as e:
+        print(f"Erro ao obter acontecimentos do pet {pet_id}: {e}")
+        return []
+
+def fazer_upload_foto_acontecimento(foto, pet_id, acontecimento_id):
+    """
+    Faz upload de uma foto de acontecimento para o Firebase Storage.
+    
+    Args:
+        foto: Arquivo de imagem (UploadedFile)
+        pet_id: ID do pet
+        acontecimento_id: ID do acontecimento
+        
+    Returns:
+        str: URL pública da imagem ou None se falhou
+    """
+    if not hasattr(st.user, 'email') or not foto:
+        return None
+        
+    try:
+        bucket = storage.bucket()
+        
+        # Define o nome do arquivo
+        nome_arquivo = f"usuarios/{st.user.email}/pets/{pet_id}/acontecimentos/{acontecimento_id}_{foto.name}"
+        
+        # Faz upload do arquivo
+        blob = bucket.blob(nome_arquivo)
+        blob.upload_from_file(foto, content_type=foto.type)
+        
+        # Torna público
+        blob.make_public()
+        
+        return blob.public_url
+        
+    except Exception as e:
+        print(f"Erro ao fazer upload da foto do acontecimento: {e}")
+        return None
+
+def editar_acontecimento_pet(acontecimento_id, pet_id, data_hora, descricao, url_foto):
+    """
+    Edita um acontecimento do pet no Firestore.
+    
+    Args:
+        acontecimento_id: ID do acontecimento
+        pet_id: ID do pet
+        data_hora: Data e hora do acontecimento
+        descricao: Descrição do acontecimento
+        url_foto: URL da foto no Firebase Storage
+        
+    Returns:
+        bool: True se editado com sucesso, False caso contrário
+    """
+    if not hasattr(st.user, 'email'):
+        return False
+        
+    db = firestore.client()
+    acontecimento_ref = db.collection(COLECAO_USUARIOS).document(st.user.email).collection("pets").document(pet_id).collection("acontecimentos").document(acontecimento_id)
+    
+    try:
+        dados_atualizados = {
+            "data_hora": data_hora,
+            "descricao": descricao,
+            "url_foto": url_foto,
+            "data_atualizacao": datetime.now()
+        }
+        
+        acontecimento_ref.update(dados_atualizados)
+        return True
+    except Exception as e:
+        print(f"Erro ao editar acontecimento: {e}")
+        return False

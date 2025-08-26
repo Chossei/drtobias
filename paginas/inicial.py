@@ -1,4 +1,5 @@
 import streamlit as st
+from datetime import date, datetime
 from paginas.funcoes import (
     obter_pets, 
     excluir_pet, 
@@ -6,7 +7,11 @@ from paginas.funcoes import (
     gerar_relatorio_pet_pdf,
     fazer_upload_exame_pet,
     salvar_exame_pet,
-    obter_exames_pet
+    obter_exames_pet,
+    salvar_acontecimento_pet,
+    obter_acontecimentos_pet,
+    fazer_upload_foto_acontecimento,
+    editar_acontecimento_pet
 )
 from paginas.agentes_funcoes import (
     relator
@@ -72,6 +77,91 @@ def dialog_adicionar_exame(pet_id, pet_nome):
                     time.sleep(5)
                     st.rerun()
                     
+        
+        with col2:
+            if st.form_submit_button("❌ Cancelar", use_container_width=True):
+                st.rerun()
+
+# ============================================================================
+# DIÁLOGO PARA REGISTRAR ACONTECIMENTO
+# ============================================================================
+
+@st.dialog("📝 Registrar Acontecimento", width = "large")
+def dialog_registrar_acontecimento(pet_id, pet_nome):
+    st.markdown(f"### Registrar acontecimento para **{pet_nome}**")
+    
+    with st.form("form_registrar_acontecimento"):
+        col_data, col_hora = st.columns(2)
+        
+        with col_data:
+            data_acontecimento = st.date_input(
+                "Data do Acontecimento *",
+                value=None,
+                max_value=date.today(),
+                format="DD/MM/YYYY"
+            )
+        
+        with col_hora:
+            hora_acontecimento = st.time_input(
+                "Hora do Acontecimento *",
+                value=None
+            )
+        
+        descricao = st.text_area(
+            "Descrição do Acontecimento *",
+            placeholder="Descreva o que aconteceu com seu pet...",
+            height=100
+        )
+        
+        foto_acontecimento = st.file_uploader(
+            "Foto do Acontecimento (opcional)",
+            type=['png', 'jpg', 'jpeg'],
+            help="Formatos aceitos: PNG, JPG, JPEG"
+        )
+        
+        if foto_acontecimento is not None:
+            st.image(foto_acontecimento, caption="Preview da foto", width=300)
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            if st.form_submit_button("📝 Registrar Acontecimento", type="primary", use_container_width=True):
+                if not data_acontecimento or not hora_acontecimento or not descricao:
+                    st.error("Por favor, preencha a data, hora e descrição do acontecimento!")
+                else:
+                    with st.spinner("Registrando acontecimento..."):
+                        # Combina data e hora em um datetime
+                        data_hora = datetime.combine(data_acontecimento, hora_acontecimento)
+                        
+                        # Primeiro salva o acontecimento sem foto para obter o ID
+                        acontecimento_id = salvar_acontecimento_pet(pet_id, data_hora, descricao)
+                        
+                        if acontecimento_id:
+                            url_foto = None
+                            
+                            # Se há foto, faz o upload
+                            if foto_acontecimento is not None:
+                                with st.spinner("Fazendo upload da foto..."):
+                                    url_foto = fazer_upload_foto_acontecimento(foto_acontecimento, pet_id, acontecimento_id)
+                                
+                                if url_foto:
+                                    # Atualiza o acontecimento com a URL da foto
+                                    editar_acontecimento_pet(acontecimento_id, pet_id, data_hora, descricao, url_foto)
+                                    st.success("✅ Upload da foto concluído!")
+                                else:
+                                    st.warning("⚠️ Erro ao fazer upload da foto. Acontecimento registrado sem imagem.")
+                            
+                            st.success(f"✅ Acontecimento registrado com sucesso!", width="stretch")
+                            registrar_acao_usuario("Registrar Acontecimento", f"Usuário registrou acontecimento para o pet {pet_nome}")
+                        else:
+                            st.error("❌ Erro ao registrar acontecimento no banco de dados.")
+                    
+                    st.balloons()
+
+                    # Pausa antes de fechar o diálogo
+                    import time
+                    time.sleep(3)
+                    st.rerun()
         
         with col2:
             if st.form_submit_button("❌ Cancelar", use_container_width=True):
@@ -164,12 +254,19 @@ if len(pets) > 0:
                     st.markdown(f"**{pet['especie']}** • **{pet['raca']}**")
                     st.markdown(f"**{pet['sexo']}** • **{pet['idade']}**")
                     
-                    # Contador de exames
+                    # Contador de exames e acontecimentos
                     exames_count = len(obter_exames_pet(pet['id']))
+                    acontecimentos_count = len(obter_acontecimentos_pet(pet['id']))
+                    
                     if exames_count > 0:
                         st.markdown(f"📋 **{exames_count}** exame(s) cadastrado(s)")
                     else:
                         st.markdown("📋 Nenhum exame cadastrado")
+                    
+                    if acontecimentos_count > 0:
+                        st.markdown(f"📝 **{acontecimentos_count}** acontecimento(s) registrado(s)")
+                    else:
+                        st.markdown("📝 Nenhum acontecimento registrado")
                     
                     
                     # Informações detalhadas agrupadas em "Saber mais"
@@ -270,9 +367,47 @@ if len(pets) > 0:
                         else:
                             st.markdown("---")
                             st.markdown("**📋 Exames:** Nenhum exame cadastrado")
+                        
                     
-                    # Botões de ação divididos em 2 colunas
-                    col_btn1, col_btn2 = st.columns(2)
+                    # Expander específico para acontecimentos
+                    acontecimentos = obter_acontecimentos_pet(pet['id'])
+                    with st.expander(f"📝 Acontecimentos ({len(acontecimentos)})", expanded=False):
+                        if acontecimentos:
+                            for idx, acontecimento in enumerate(acontecimentos, 1):
+                                # Data do acontecimento formatada
+                                if acontecimento["data_hora"]:
+                                    try:
+                                        if hasattr(acontecimento["data_hora"], "strftime"):
+                                            data_acontecimento = acontecimento["data_hora"].strftime("%d/%m/%Y")
+                                            hora_acontecimento = acontecimento["data_hora"].strftime("%H:%M")
+                                            data_completa = f"{data_acontecimento} às {hora_acontecimento}"
+                                        else:
+                                            data_completa = str(acontecimento["data_hora"])[:19].replace("T", " às ")
+                                    except:
+                                        data_completa = "Data não disponível"
+                                else:
+                                    data_completa = "Data não disponível"
+                                
+                                # Layout com foto à esquerda e informações à direita
+                                col_foto, col_info = st.columns([1, 3])
+                                
+                                with col_foto:
+                                    if acontecimento['url_foto']:
+                                        st.image(acontecimento['url_foto'], use_container_width=True)
+                                    else:
+                                        st.markdown("📷")
+                                
+                                with col_info:
+                                    st.markdown(f"**📅 {data_completa}**")
+                                    st.markdown(f"📝 {acontecimento['descricao']}")
+                                
+                                if idx < len(acontecimentos):  # Adiciona divisor entre acontecimentos
+                                    st.divider()
+                        else:
+                            st.markdown("Nenhum acontecimento registrado ainda.")
+                    
+                    # Botões de ação divididos em 3 colunas
+                    col_btn1, col_btn2, col_btn3 = st.columns(3)
                     
                     with col_btn1:
                         # Botão de gerar relatório
@@ -313,6 +448,17 @@ if len(pets) > 0:
                             type="secondary"
                         ):
                             dialog_adicionar_exame(pet['id'], pet['nome'])
+                    
+                    with col_btn3:
+                        # Botão de registrar acontecimento
+                        if st.button(
+                            "📝 Registrar Acontecimento",
+                            key=f"add_acontecimento_{pet['id']}",
+                            help="Registrar acontecimento do pet",
+                            use_container_width=True,
+                            type="secondary"
+                        ):
+                            dialog_registrar_acontecimento(pet['id'], pet['nome'])
 else:
     # Mensagem quando não há pets cadastrados
     st.info("🐾 **Você ainda não cadastrou nenhum pet!**")
