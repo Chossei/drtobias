@@ -21,7 +21,8 @@ if not hasattr(st.user, 'is_logged_in') or not st.user.is_logged_in:
     with col2:
         # Logo centralizada
         st.image('arquivos/capa.png', width=200, use_container_width=True)
-        st.title("🐾 Pelunos - Seu Pet Mais Saudável 🐾") 
+        st.title("🐾 Pelunos 🐾")
+        st.subheader("Um clique de cuidado, seu pet mais saudável.")
         st.markdown("Faça login com sua conta Google para conversar com seu veterinário especialista em pets.")
         # Botão de login
         if st.button("Login com Google", type="primary", use_container_width=True, icon=':material/login:'):
