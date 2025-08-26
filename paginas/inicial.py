@@ -18,7 +18,7 @@ from paginas.agentes_funcoes import (
 )
 
 
-coluna_logo, coluna_titulo = st.columns([1, 8])
+coluna_logo, coluna_titulo = st.columns([1, 10])
 
 with coluna_logo:
     st.image('arquivos/imagem_logo.png', use_container_width = True)
@@ -523,5 +523,6 @@ with st.expander("💡 Saiba mais sobre o Assistente Virtual"):
 
 
     st.info("🎯 **Dica:** Quanto mais informações você fornecer sobre seus pets, mais preciso nosso assistente virtual será em suas recomendações! 🐾")
+
 
 
