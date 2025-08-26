@@ -497,23 +497,21 @@ if len(pets) > 0:
 # INFORMAÇÕES SOBRE DR. TOBIAS
 # ============================================================================
 
-st.markdown("---")
-st.markdown("### 🩺 Sobre o Assistente Virtual")
+with st.expander("💡 Saiba mais sobre o Assistente Virtual"):
+    col_info1, col_info2 = st.columns(2)
 
-col_info1, col_info2 = st.columns(2)
+    with col_info1:
+        st.markdown("**🤖 Assistente Inteligente:**")
+        st.markdown("• Especialista em cuidados com pets")
+        st.markdown("• Conhecimento sobre diferentes espécies")
+        st.markdown("• Conselhos personalizados baseados no seu pet")
+        st.markdown("• Disponível 24/7 para tirar suas dúvidas")
 
-with col_info1:
-    st.markdown("**🤖 Assistente Inteligente:**")
-    st.markdown("• Especialista em cuidados com pets")
-    st.markdown("• Conhecimento sobre diferentes espécies")
-    st.markdown("• Conselhos personalizados baseados no seu pet")
-    st.markdown("• Disponível 24/7 para tirar suas dúvidas")
+    with col_info2:
+        st.markdown("**💡 Como usar:**")
+        st.markdown("• Cadastre todos os seus pets com detalhes")
+        st.markdown("• Acesse o chat e mencione o nome do seu pet")
+        st.markdown("• Faça perguntas específicas sobre comportamento, saúde, alimentação")
+        st.markdown("• Receba orientações profissionais personalizadas")
 
-with col_info2:
-    st.markdown("**💡 Como usar:**")
-    st.markdown("• Cadastre todos os seus pets com detalhes")
-    st.markdown("• Acesse o chat e mencione o nome do seu pet")
-    st.markdown("• Faça perguntas específicas sobre comportamento, saúde, alimentação")
-    st.markdown("• Receba orientações profissionais personalizadas")
-
-st.info("🎯 **Dica:** Quanto mais informações você fornecer sobre seus pets, mais preciso nosso assistente virtual será em suas recomendações! 🐾")
+    st.info("🎯 **Dica:** Quanto mais informações você fornecer sobre seus pets, mais preciso nosso assistente virtual será em suas recomendações! 🐾")
