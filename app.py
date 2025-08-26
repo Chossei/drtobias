@@ -24,13 +24,19 @@ if not hasattr(st.user, 'is_logged_in') or not st.user.is_logged_in:
         # st.title("🐾 Pelunos 🐾")
 
         tagline_html = f"""
-        <h3 style='text-align: center; font-weight: 500;'>
+        <h2 style='text-align: center; font-weight: 500;'>
         Um clique de cuidado, seu pet mais saudável
-        <span style='color: #004aad;'>&hearts;</span>
-        </h3>"""
+        <span style='color: #ff5a27;'>&hearts;</span>
+        </h2>"""
         
         st.markdown(tagline_html, unsafe_allow_html = True)
-        st.markdown("Faça login com sua conta Google para conversar com seu veterinário especialista em pets.")
+
+        msg_login = """
+        <p style='text-align: center;'>
+        Faça login com sua conta Google para conversar com seu veterinário especialista em pets.
+        </p>
+        """
+        st.markdown(msg_login, unsafe_allow_html=True)
         # Botão de login
         if st.button("Login com Google", type="primary", use_container_width=True, icon=':material/login:'):
             # Registra o usuário no Firestore se for o primeiro acesso (login_usuario faz isso)
