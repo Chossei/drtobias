@@ -21,7 +21,7 @@ from paginas.agentes_funcoes import (
 coluna_logo, coluna_titulo = st.columns([1, 4])
 
 with coluna_logo:
-    st.image('arquivos/imagem_logo.png')
+    st.image('arquivos/imagem_logo.png', width = 50)
 
 with coluna_titulo:
     st.title("Pelunos")
@@ -520,5 +520,6 @@ with st.expander("💡 Saiba mais sobre o Assistente Virtual"):
         st.markdown("• Acesse o chat e mencione o nome do seu pet")
         st.markdown("• Faça perguntas específicas sobre comportamento, saúde, alimentação")
         st.markdown("• Receba orientações profissionais personalizadas")
+
 
     st.info("🎯 **Dica:** Quanto mais informações você fornecer sobre seus pets, mais preciso nosso assistente virtual será em suas recomendações! 🐾")
