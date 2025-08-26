@@ -17,8 +17,15 @@ from paginas.agentes_funcoes import (
     relator
 )
 
-st.title("🏠 Central de Informações")
-st.markdown("*Bem-vindo ao Pelunos! Aqui você pode acompanhar seus pets e acessar todas as funcionalidades.*")
+
+coluna_logo, coluna_titulo = st.columns([1, 4])
+
+with coluna_logo:
+    st.image('arquivos/imagem_logo.png')
+
+with coluna_titulo:
+    st.title("Pelunos")
+    st.markdown("*Bem-vindo ao Pelunos! Aqui você pode acompanhar seus pets e acessar todas as funcionalidades.*")
 
 # ============================================================================
 # DIÁLOGO PARA ADICIONAR EXAME

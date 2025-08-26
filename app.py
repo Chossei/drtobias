@@ -142,7 +142,7 @@ else:
         # Define a estrutura das páginas para Dr. Tobias
         paginas = {
             "Pelunos": [
-                st.Page("paginas/inicial.py", title="Página Inicial", icon='🏠', default=True),
+                st.Page("paginas/inicial.py", title="Central de Informações", icon='🏠', default=True),
                 st.Page("paginas/chatbot.py", title="Conversar", icon='💬'),
                 st.Page("paginas/pets.py", title="Cadastro Pet", icon='🐾'), 
             ],
