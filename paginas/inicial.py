@@ -17,8 +17,8 @@ from paginas.agentes_funcoes import (
     relator
 )
 
-st.title("🏠 Pelunos - Página Inicial")
-st.markdown("*Bem-vindo ao seu assistente veterinário especializado! Aqui você pode acompanhar seus pets e acessar todas as funcionalidades.*")
+st.title("🏠 Central de Informações")
+st.markdown("*Bem-vindo ao Pelunos! Aqui você pode acompanhar seus pets e acessar todas as funcionalidades.*")
 
 # ============================================================================
 # DIÁLOGO PARA ADICIONAR EXAME
@@ -463,13 +463,13 @@ else:
     # Mensagem quando não há pets cadastrados
     st.info("🐾 **Você ainda não cadastrou nenhum pet!**")
     
-    col_info1, col_info2, col_info3 = st.columns([1, 2, 1])
-    with col_info2:
-        st.markdown("### 🎯 Para começar:")
-        st.markdown("1. **Clique em 'Cadastro de Pets'** no menu lateral")
-        st.markdown("2. **Preencha as informações** do seu bichinho")  
-        st.markdown("3. **Volte aqui** para ver todos os seus pets")
-        st.markdown("4. **Converse com Dr. Tobias** sobre seus pets!")
+    with st.status("Siga os passos para começar!", expanded=True):
+        st.markdown("""
+        1.  Clique em **'Cadastro de Pets'** no menu lateral
+        2.  Preencha as informações do seu bichinho
+        3.  Volte aqui para ver todos os seus pets!
+        4.  Converse com Dr. Tobias sobre seus pets!
+        """)
 
 # ============================================================================
 # RESUMO E AÇÕES RÁPIDAS
