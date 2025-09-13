@@ -697,6 +697,646 @@ def excluir_pet(pet_id):
         return False
 
 # ============================================================================
+# FUNÇÃO ALTERNATIVA PARA GERAR RELATÓRIO HTML DO PET
+# ============================================================================
+
+def gerar_relatorio_pet_html(pet_data, motivo_consulta=""):
+    """
+    Gera um relatório HTML minimalista e profissional do pet para veterinário.
+    
+    Args:
+        pet_data: Dicionário com dados do pet
+        motivo_consulta: Motivo da consulta (opcional)
+        
+    Returns:
+        str: Conteúdo HTML do relatório
+    """
+    from datetime import datetime
+    
+    # Data atual formatada
+    data_atual = datetime.now().strftime("%d/%m/%Y as %H:%M")
+    
+    # Obtém exames e acontecimentos
+    exames = obter_exames_pet(pet_data.get('id'))
+    acontecimentos = obter_acontecimentos_pet(pet_data.get('id'))
+    
+    # HTML do relatório - Design minimalista e profissional
+    html = f"""
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Relatório Veterinário - {pet_data.get('nome', 'Pet')} - Pelunos</title>
+        <style>
+            * {{
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }}
+            
+            body {{
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: #333;
+                background: #ffffff;
+                font-size: 14px;
+            }}
+            
+            .container {{
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 20px;
+                background: white;
+            }}
+            
+            .header {{
+                text-align: center;
+                border-bottom: 3px solid #004aad;
+                padding-bottom: 20px;
+                margin-bottom: 30px;
+            }}
+            
+            .header-logo {{
+                width: 80px;
+                height: 80px;
+                margin-bottom: 15px;
+            }}
+            
+            .app-name {{
+                font-size: 32px;
+                font-weight: bold;
+                color: #004aad;
+                margin-bottom: 10px;
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }}
+            
+            .subtitle {{
+                font-size: 14px;
+                color: #666;
+                margin-bottom: 15px;
+            }}
+            
+            .title {{
+                font-size: 20px;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 20px;
+            }}
+            
+            .pet-info {{
+                display: flex;
+                align-items: flex-start;
+                justify-content: center;
+                gap: 30px;
+                margin: 20px 0;
+                padding: 20px;
+                background: #f8f9fa;
+                border-radius: 8px;
+                border: 1px solid #e0e0e0;
+            }}
+            
+            .pet-photo {{
+                width: 140px;
+                height: 140px;
+                border-radius: 50%;
+                border: 4px solid #004aad;
+                object-fit: cover;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                flex-shrink: 0;
+            }}
+            
+            .pet-photo-placeholder {{
+                width: 140px;
+                height: 140px;
+                border-radius: 50%;
+                border: 4px solid #004aad;
+                background: #f0f0f0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 36px;
+                color: #666;
+                flex-shrink: 0;
+            }}
+            
+            .pet-basic {{
+                text-align: left;
+                flex: 1;
+            }}
+            
+            .pet-name {{
+                font-size: 24px;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 15px;
+            }}
+            
+            .pet-details {{
+                color: #666;
+                font-size: 16px;
+                line-height: 2.2;
+            }}
+            
+            .pet-details .info-line {{
+                margin-bottom: 8px;
+            }}
+            
+            .pet-details strong {{
+                color: #004aad;
+                font-weight: 600;
+            }}
+            
+            .section {{
+                margin-bottom: 25px;
+                border: 1px solid #e0e0e0;
+                border-radius: 5px;
+                overflow: hidden;
+            }}
+            
+            .section-header {{
+                background: #f8f9fa;
+                padding: 12px 15px;
+                border-bottom: 1px solid #e0e0e0;
+                font-weight: bold;
+                color: #333;
+                font-size: 15px;
+            }}
+            
+            .section-content {{
+                padding: 15px;
+            }}
+            
+            .text-content {{
+                color: #333;
+                line-height: 1.6;
+                text-align: justify;
+            }}
+            
+            .no-data-message {{
+                text-align: center;
+                color: #666;
+                font-style: italic;
+                padding: 20px;
+                background: #fafafa;
+                border-radius: 5px;
+                border: 1px dashed #ddd;
+            }}
+            
+            .exames-table {{
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 10px;
+                font-size: 12px;
+            }}
+            
+            .exames-table th {{
+                background: #f8f9fa;
+                color: #333;
+                padding: 10px;
+                text-align: left;
+                font-weight: bold;
+                border-bottom: 2px solid #e0e0e0;
+            }}
+            
+            .exames-table td {{
+                padding: 8px 10px;
+                border-bottom: 1px solid #e0e0e0;
+            }}
+            
+            .exames-table tr:nth-child(even) {{
+                background: #fafafa;
+            }}
+            
+            .exames-table tr:hover {{
+                background: #f0f0f0;
+            }}
+            
+            .exame-link {{
+                color: #004aad;
+                text-decoration: none;
+                font-weight: 600;
+                padding: 4px 8px;
+                background: #e3f2fd;
+                border-radius: 4px;
+                font-size: 11px;
+            }}
+            
+            .exame-link:hover {{
+                background: #bbdefb;
+                text-decoration: underline;
+            }}
+            
+            .acontecimento-item {{
+                border-bottom: 1px solid #e0e0e0;
+                padding: 12px 0;
+            }}
+            
+            .acontecimento-item:last-child {{
+                border-bottom: none;
+            }}
+            
+            .acontecimento-layout {{
+                display: flex;
+                gap: 15px;
+                align-items: flex-start;
+            }}
+            
+            .acontecimento-photo-col {{
+                flex: 0 0 80px;
+                text-align: center;
+            }}
+            
+            .acontecimento-info-col {{
+                flex: 1;
+            }}
+            
+            .acontecimento-header {{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 8px;
+            }}
+            
+            .acontecimento-date {{
+                background: #004aad;
+                color: white;
+                padding: 4px 10px;
+                border-radius: 15px;
+                font-size: 11px;
+                font-weight: bold;
+            }}
+            
+            .acontecimento-number {{
+                background: #fd5e21;
+                color: white;
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                font-size: 11px;
+            }}
+            
+            .acontecimento-photo {{
+                width: 80px;
+                height: 80px;
+                border-radius: 5px;
+                object-fit: cover;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }}
+            
+            .acontecimento-photo-placeholder {{
+                width: 80px;
+                height: 80px;
+                border-radius: 5px;
+                background: #f0f0f0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 24px;
+                color: #666;
+                border: 1px dashed #ddd;
+            }}
+            
+            .footer-bottom {{
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                gap: 30px;
+                margin-top: 30px;
+                padding: 20px;
+                background: #f5f5f5;
+                border-radius: 8px;
+                border: 1px solid #e0e0e0;
+            }}
+            
+            .footer-left {{
+                flex: 1;
+                text-align: left;
+            }}
+            
+            .footer-right {{
+                flex: 1;
+                text-align: left;
+            }}
+            
+            .footer-logo-img {{
+                width: 16px;
+                height: 16px;
+                margin-right: 6px;
+                vertical-align: middle;
+                opacity: 0.7;
+            }}
+            
+            .footer-logo-text {{
+                font-weight: 600;
+                color: #666;
+                font-size: 11px;
+            }}
+            
+            .footer {{
+                text-align: center;
+                border-top: 2px solid #e0e0e0;
+                padding-top: 20px;
+                margin-top: 30px;
+                color: #666;
+                font-size: 12px;
+            }}
+            
+            .footer-info {{
+                margin-bottom: 15px;
+                line-height: 1.6;
+            }}
+            
+            .footer-brand {{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-top: 15px;
+                opacity: 0.6;
+            }}
+            
+            .data-label {{
+                font-weight: bold;
+                color: #004aad;
+                margin-bottom: 8px;
+                font-size: 12px;
+                text-transform: uppercase;
+            }}
+            
+            .data-value {{
+                color: #333;
+                font-size: 14px;
+                font-weight: 600;
+            }}
+            
+            .observacoes-title {{
+                font-weight: bold;
+                color: #004aad;
+                margin-bottom: 8px;
+                font-size: 12px;
+                text-transform: uppercase;
+            }}
+            
+            .observacoes-text {{
+                color: #666;
+                font-size: 12px;
+                line-height: 1.5;
+            }}
+            
+            @media print {{
+                body {{
+                    background: white;
+                }}
+                .container {{
+                    padding: 0;
+                    max-width: none;
+                }}
+                .header {{
+                    border-bottom-color: #000;
+                }}
+                .section {{
+                    border-color: #000;
+                    break-inside: avoid;
+                }}
+                .section-header {{
+                    background: #f0f0f0;
+                }}
+                .pet-info {{
+                    background: #f0f0f0;
+                    border-color: #000;
+                }}
+                .footer-bottom {{
+                    background: #f0f0f0;
+                    border-color: #000;
+                }}
+            }}
+            
+            @media (max-width: 768px) {{
+                .container {{
+                    padding: 15px;
+                }}
+                .pet-info {{
+                    flex-direction: column;
+                    text-align: center;
+                    gap: 20px;
+                }}
+                .pet-photo,
+                .pet-photo-placeholder {{
+                    width: 120px;
+                    height: 120px;
+                }}
+                .footer-bottom {{
+                    flex-direction: column;
+                    gap: 20px;
+                }}
+                .exames-table {{
+                    font-size: 11px;
+                }}
+                .exames-table th,
+                .exames-table td {{
+                    padding: 6px 8px;
+                }}
+                .acontecimento-layout {{
+                    flex-direction: column;
+                    gap: 10px;
+                }}
+                .acontecimento-photo-col {{
+                    flex: none;
+                    text-align: center;
+                }}
+                .acontecimento-photo,
+                .acontecimento-photo-placeholder {{
+                    width: 60px;
+                    height: 60px;
+                }}
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <!-- Cabeçalho -->
+            <div class="header">
+                <img src="arquivos/avatar_assistente.png" alt="Pelunos" class="header-logo">
+                <div class="app-name">Pelunos</div>
+                <div class="subtitle">Assistente Veterinário Digital</div>
+                <div class="title">Relatório Veterinário</div>
+            </div>
+            
+            <!-- Informações Básicas com Foto -->
+            <div class="section">
+                <div class="section-header">📋 Informações Básicas</div>
+                <div class="section-content">
+                    <div class="pet-info">
+                        {f'<img src="{pet_data.get("url_foto", "https://via.placeholder.com/140x140?text=🐾")}" alt="{pet_data.get("nome", "Pet")}" class="pet-photo">' if pet_data.get('url_foto') else '<div class="pet-photo-placeholder">🐾</div>'}
+                        
+                        <div class="pet-basic">
+                            <div class="pet-name">{pet_data.get('nome', 'Não informado')}</div>
+                            <div class="pet-details">
+                                <div class="info-line">
+                                    <strong>Espécie:</strong> {pet_data.get('especie', 'Não informada')} • 
+                                    <strong>Raça:</strong> {pet_data.get('raca', 'Não informada')} • 
+                                    <strong>Sexo:</strong> {pet_data.get('sexo', 'Não informado')}
+                                </div>
+                                <div class="info-line">
+                                    <strong>Idade:</strong> {pet_data.get('idade', 'Não informado')} anos • 
+                                    <strong>Peso:</strong> {pet_data.get('peso', 'Não informado')} kg • 
+                                    <strong>Castrado:</strong> {pet_data.get('castrado', 'Não informado')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Motivo da Consulta -->
+            {f'''
+            <div class="section">
+                <div class="section-header">🏥 Motivo da Consulta</div>
+                <div class="section-content">
+                    <div class="text-content">{motivo_consulta}</div>
+                </div>
+            </div>
+            ''' if motivo_consulta and len(motivo_consulta) > 1 else ''}
+            
+            <!-- Saúde Geral -->
+            {f'''
+            <div class="section">
+                <div class="section-header">💊 Saúde Geral</div>
+                <div class="section-content">
+                    <div class="text-content">{pet_data.get('saude', '')}</div>
+                </div>
+            </div>
+            ''' if pet_data.get('saude') else ''}
+            
+            <!-- Alimentação -->
+            {f'''
+            <div class="section">
+                <div class="section-header">🍽️ Alimentação</div>
+                <div class="section-content">
+                    <div class="text-content">{pet_data.get('alimentacao', '')}</div>
+                </div>
+            </div>
+            ''' if pet_data.get('alimentacao') else ''}
+            
+            <!-- História do Pet -->
+            {f'''
+            <div class="section">
+                <div class="section-header">📖 História do Pet</div>
+                <div class="section-content">
+                    <div class="text-content">{pet_data.get('historia', '')}</div>
+                </div>
+            </div>
+            ''' if pet_data.get('historia') else ''}
+            
+            <!-- Exames - Sempre visível -->
+            <div class="section">
+                <div class="section-header">🔬 Exames ({len(exames) if exames else 0})</div>
+                <div class="section-content">
+                    {f'''
+                    <table class="exames-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nome do Exame</th>
+                                <th>Tipo</th>
+                                <th>Data</th>
+                                <th>Acesso</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {''.join([f'''
+                            <tr>
+                                <td>{idx}</td>
+                                <td>{exame['nome_exame']}</td>
+                                <td>{'Sangue' if any(palavra in exame['nome_exame'].lower() for palavra in ['sangue', 'hemograma', 'bioquimic']) else 'Raio-X' if any(palavra in exame['nome_exame'].lower() for palavra in ['raio', 'radiograf', 'rx']) else 'Ultrassom' if any(palavra in exame['nome_exame'].lower() for palavra in ['ultra', 'ecograf']) else 'Urina' if any(palavra in exame['nome_exame'].lower() for palavra in ['urina', 'urinalis']) else 'Fezes' if any(palavra in exame['nome_exame'].lower() for palavra in ['fezes', 'parasit']) else 'Cardiológico' if any(palavra in exame['nome_exame'].lower() for palavra in ['cardiologico', 'coração', 'eco']) else 'Oftalmológico' if any(palavra in exame['nome_exame'].lower() for palavra in ['oftalmologic', 'olho', 'visão']) else 'Geral'}</td>
+                                <td>{exame.get("data_upload").date().strftime("%d/%m/%Y") if exame.get("data_upload") and hasattr(exame.get("data_upload"), "date") else str(exame.get("data_upload", ""))[:10] if exame.get("data_upload") else 'N/A'}</td>
+                                <td><a href="{exame.get('url_pdf', '#')}" target="_blank" class="exame-link">📄 Ver PDF</a></td>
+                            </tr>
+                            ''' for idx, exame in enumerate(exames, 1)])}
+                        </tbody>
+                    </table>
+                    
+                    <div style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 5px; font-size: 12px; color: #666;">
+                        <strong>📋 Nota:</strong> Clique nos links acima para acessar os PDFs dos exames. Cada exame contém informações detalhadas sobre os resultados e conclusões.
+                    </div>
+                    ''' if exames else '''
+                    <div class="no-data-message">
+                        📋 Não consta exame registrado para este pet.
+                    </div>
+                    '''}
+                </div>
+            </div>
+            
+            <!-- Acontecimentos - Sempre visível -->
+            <div class="section">
+                <div class="section-header">📅 Acontecimentos ({len(acontecimentos) if acontecimentos else 0})</div>
+                <div class="section-content">
+                    {f'''
+                    {''.join([f'''
+                    <div class="acontecimento-item">
+                        <div class="acontecimento-layout">
+                            <div class="acontecimento-photo-col">
+                                {f'<img src="{acontecimento.get("url_foto", "")}" alt="Foto do acontecimento" class="acontecimento-photo">' if acontecimento.get('url_foto') else '<div class="acontecimento-photo-placeholder">📷</div>'}
+                            </div>
+                            <div class="acontecimento-info-col">
+                                <div class="acontecimento-header">
+                                    <div class="acontecimento-date">
+                                        {acontecimento.get("data_hora").strftime("%d/%m/%Y as %H:%M") if acontecimento.get("data_hora") and hasattr(acontecimento.get("data_hora"), "strftime") else str(acontecimento.get("data_hora", ""))[:19].replace("T", " as ") if acontecimento.get("data_hora") else 'Data não disponível'}
+                                    </div>
+                                    <div class="acontecimento-number">{idx}</div>
+                                </div>
+                                <div class="text-content">{acontecimento.get('descricao', 'Sem descrição')}</div>
+                            </div>
+                        </div>
+                    </div>
+                    ''' for idx, acontecimento in enumerate(acontecimentos, 1)])}
+                    ''' if acontecimentos else '''
+                    <div class="no-data-message">
+                        📅 Não consta anotação registrada para este pet.
+                    </div>
+                    '''}
+                </div>
+            </div>
+            
+            <!-- Rodapé com Data e Observações lado a lado -->
+            <div class="footer-bottom">
+                <div class="footer-left">
+                    <div class="data-label">📅 Relatório Gerado em</div>
+                    <div class="data-value">{data_atual}</div>
+                </div>
+                
+                <div class="footer-right">
+                    <div class="observacoes-title">💡 Observações</div>
+                    <div class="observacoes-text">
+                        Este relatório foi gerado automaticamente pelo sistema Pelunos. As informações são declarações do tutor e devem ser validadas durante a consulta veterinária.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Rodapé -->
+            <div class="footer">
+                <div class="footer-info">
+                    Assistente Veterinário Digital<br>
+                    Seu pet mais saudável com um clique de cuidado
+                </div>
+                
+                <div class="footer-brand">
+                    <img src="arquivos/avatar_assistente.png" alt="Pelunos" class="footer-logo-img">
+                    <span class="footer-logo-text">Pelunos</span>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+    
+    return html
+
+# ============================================================================
 # FUNÇÃO PARA GERAR RELATÓRIO PDF DO PET
 # ============================================================================
 
@@ -740,11 +1380,6 @@ def gerar_relatorio_pet_pdf(pet_data, motivo_consulta=""):
     
     # Título principal
     story.append(Paragraph("RELATÓRIO VETERINÁRIO - PELUNOS", titulo_style))
-    story.append(Spacer(1, 20))
-    
-    # Data do relatório
-    data_relatorio = datetime.now().strftime("%d/%m/%Y às %H:%M")
-    story.append(Paragraph(f"Relatório gerado em: {data_relatorio}", styles['Normal']))
     story.append(Spacer(1, 20))
     
     # Foto do pet (se disponível)
@@ -890,30 +1525,34 @@ def gerar_relatorio_pet_pdf(pet_data, motivo_consulta=""):
         story.append(tabela_basicos)
         story.append(Spacer(1, 20))
     
+    # Motivo da consulta de acordo com o relato do tutor 
+    if len(motivo_consulta) > 1:
+        story.append(Paragraph("MOTIVO DA CONSULTA", subtitulo_style))
+        story.append(Paragraph(motivo_consulta, styles['Normal']))
+        story.append(Spacer(1, 15))
+
+    # Informações de Saúde
+    if pet_data.get('saude'):
+        story.append(Paragraph("SAÚDE GERAL", subtitulo_style))
+        story.append(Paragraph(pet_data['saude'], styles['Normal']))
+        story.append(Spacer(1, 15))
+
+    # Informações de Alimentação
+    if pet_data.get('alimentacao'):
+        story.append(Paragraph("ALIMENTAÇÃO", subtitulo_style))
+        story.append(Paragraph(pet_data['alimentacao'], styles['Normal']))
+        story.append(Spacer(1, 15))
+
     # História do Pet
     if pet_data.get('historia'):
         story.append(Paragraph("HISTÓRIA DO PET", subtitulo_style))
         story.append(Paragraph(pet_data['historia'], styles['Normal']))
         story.append(Spacer(1, 15))
     
-    # Informações de Saúde
-    if pet_data.get('saude'):
-        story.append(Paragraph("SAÚDE GERAL", subtitulo_style))
-        story.append(Paragraph(pet_data['saude'], styles['Normal']))
-        story.append(Spacer(1, 15))
-    
-    # Informações de Alimentação
-    if pet_data.get('alimentacao'):
-        story.append(Paragraph("ALIMENTAÇÃO", subtitulo_style))
-        story.append(Paragraph(pet_data['alimentacao'], styles['Normal']))
-        story.append(Spacer(1, 15))
-    
-    # Motivo da consulta de acordo com o relato do tutor 
-    if len(motivo_consulta) > 1:
-        story.append(Paragraph("MOTIVO DA CONSULTA SEGUNDO O TUTOR", subtitulo_style))
-        story.append(Paragraph(motivo_consulta, styles['Normal']))
-        story.append(Spacer(1, 15))
-
+    # Data do relatório
+        data_relatorio = datetime.now().strftime("%d/%m/%Y as %H:%M")
+    story.append(Paragraph(f"Relatório gerado em: {data_relatorio}", styles['Normal']))
+    story.append(Spacer(1, 20))
     # Seção de Exames
     exames = obter_exames_pet(pet_data.get('id'))
     if exames:
@@ -932,8 +1571,6 @@ def gerar_relatorio_pet_pdf(pet_data, motivo_consulta=""):
                         data_formatada = str(exame["data_upload"])[:10]
                 except:
                     data_formatada = "N/A"
-            else:
-                data_formatada = "N/A"
             
             # Determina o tipo de exame baseado no nome
             nome_lower = exame['nome_exame'].lower()
@@ -1002,9 +1639,9 @@ def gerar_relatorio_pet_pdf(pet_data, motivo_consulta=""):
                     if hasattr(acontecimento["data_hora"], "strftime"):
                         data_acontecimento = acontecimento["data_hora"].strftime("%d/%m/%Y")
                         hora_acontecimento = acontecimento["data_hora"].strftime("%H:%M")
-                        data_completa = f"{data_acontecimento} às {hora_acontecimento}"
+                        data_completa = f"{data_acontecimento} as {hora_acontecimento}"
                     else:
-                        data_completa = str(acontecimento["data_hora"])[:19].replace("T", " às ")
+                        data_completa = str(acontecimento["data_hora"])[:19].replace("T", " as ")
                 except:
                     data_completa = "Data não disponível"
             else:

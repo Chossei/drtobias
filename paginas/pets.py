@@ -15,7 +15,6 @@ from datetime import date
 # ============================================================================
 
 st.title("🐾 Gerenciamento de Pets")
-st.markdown("*Aqui você pode visualizar, editar, excluir e cadastrar novos pets!*")
 
 # ============================================================================
 # INICIALIZAÇÃO DO STATE
@@ -54,7 +53,7 @@ def dialog_cadastrar_pet():
         
         with col2:
             sexo_pet = st.selectbox("Sexo *", options=["Macho", "Fêmea"], index=None, placeholder="Selecione o sexo")
-            nascimento_pet = st.date_input("Data de nascimento (ou adoção) *", value=None, max_value=date.today(), format="DD/MM/YYYY")
+            nascimento_pet = st.date_input("Data de nascimento (ou adoção) *", value=None, min_value=date(1980, 1, 1), max_value=date.today(), format="DD/MM/YYYY")
             castrado_pet = st.selectbox("Pet castrado? *", options=["Sim", "Não", "Não sei"], index=None, placeholder="Selecione uma opção")
             altura_pet = st.number_input("Altura (em cm)", value=0, min_value=0, max_value=300, step=1)
             saude_pet = st.text_area(
@@ -178,7 +177,7 @@ def editar_pet_dialog():
             sexo_pet = st.selectbox("Sexo *", 
                                   options=["Macho", "Fêmea"], 
                                   index=["Macho", "Fêmea"].index(pet['sexo']) if pet['sexo'] in ["Macho", "Fêmea"] else 0)
-            nascimento_pet = st.date_input("Data de nascimento (ou adoção) *", value=None, max_value=date.today(), format = "DD/MM/YYYY")
+            nascimento_pet = st.date_input("Data de nascimento (ou adoção) *", value=None, min_value=date(1980, 1, 1), max_value=date.today(), format = "DD/MM/YYYY")
             castrado_pet = st.selectbox("Pet castrado? *", 
                                       options=["Sim", "Não", "Não sei"],
                                       index=["Sim", "Não", "Não sei"].index(pet['castrado']) if pet['castrado'] in ["Sim", "Não", "Não sei"] else 0)
@@ -280,10 +279,9 @@ st.subheader("🏠 Meus Pets")
 st.markdown("""
 <style>
 .pet-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border-radius: 20px;
     padding: 0;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
     margin-bottom: 20px;
     border: none;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -292,6 +290,7 @@ st.markdown("""
     overflow: hidden;
     display: flex;
     align-items: stretch;
+    position: relative;
 }
 
 .pet-card:hover {
@@ -303,13 +302,20 @@ st.markdown("""
     flex: 0 0 40%;
     position: relative;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .pet-foto {
     width: 100%;
-    height: 200px;
+    height: 100%;
+    min-height: 200px;
+    max-height: 250px;
     object-fit: cover;
+    object-position: center;
     display: block;
+    border-radius: 20px 0 0 20px;
 }
 
 .pet-info-container {
@@ -324,17 +330,19 @@ st.markdown("""
     font-size: 1.5em;
     font-weight: bold;
     margin-bottom: 15px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.4);
     line-height: 1.2;
+    color: #ffffff;
 }
 
 .pet-info {
     font-size: 1em;
     margin-bottom: 8px;
-    opacity: 0.95;
+    opacity: 0.98;
     display: flex;
     align-items: center;
     gap: 8px;
+    color: #ffffff;
 }
 
 .pet-info-icon {
@@ -344,14 +352,14 @@ st.markdown("""
 }
 
 .cadastrar-card {
-    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    background: #ffffff;
+    border: 3px dashed rgba(253, 94, 33, 0.4);
     border-radius: 20px;
     padding: 30px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
     margin-bottom: 20px;
-    border: none;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    color: white;
+    color: #fd5e21;
     text-align: center;
     min-height: 200px;
     display: flex;
@@ -361,14 +369,15 @@ st.markdown("""
 }
 
 .cadastrar-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(253, 94, 33, 0.15);
+    border-color: #004aad;
 }
 
 .cadastrar-icon {
     font-size: 3em;
     margin-bottom: 15px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    color: #fd5e21;
 }
 
 .cadastrar-titulo {
@@ -379,8 +388,9 @@ st.markdown("""
 }
 
 .cadastrar-desc {
-    font-size: 0.95em;
-    opacity: 0.9;
+    font-size: 1.1em;
+    font-weight: 500;
+    color: #fd5e21;
     margin-bottom: 20px;
 }
 
@@ -399,11 +409,16 @@ st.markdown("""
     
     .pet-foto-container {
         flex: none;
-        height: 150px;
+        height: 180px;
+        width: 100%;
     }
     
     .pet-foto {
-        height: 150px;
+        height: 100%;
+        min-height: 180px;
+        max-height: 200px;
+        width: 100%;
+        border-radius: 20px 20px 0 0;
     }
     
     .pet-info-container {
@@ -436,7 +451,6 @@ for i in range(0, len(pets_com_botao), 3):
                     st.markdown("""
                     <div class="cadastrar-card">
                         <div class="cadastrar-icon">➕</div>
-                        <div class="cadastrar-titulo">Cadastrar Novo Pet</div>
                         <div class="cadastrar-desc">Adicione um novo pet à sua família!</div>
                     </div>
                     """, unsafe_allow_html=True)
@@ -448,15 +462,19 @@ for i in range(0, len(pets_com_botao), 3):
                     # Card do pet com estilo personalizado
                     pet = item
                     
-                    # Determina a cor do gradiente baseado na espécie
-                    if pet['especie'].lower() == 'cachorro':
-                        gradient = "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
-                    elif pet['especie'].lower() == 'gato':
-                        gradient = "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
-                    elif pet['especie'].lower() == 'pássaro':
-                        gradient = "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
-                    else:
-                        gradient = "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"
+                    # Determina a cor do gradiente baseado na identidade visual do aplicativo
+                    # Usa 4 degradês personalizados mais harmoniosos
+                    degrades = [
+                        "linear-gradient(135deg, #fd5e21 0%, #ff5aa2 100%)",  # Laranja para Rosa
+                        "linear-gradient(135deg, #004aad 0%, #fd5e21 100%)",  # Azul para Laranja
+                        "linear-gradient(135deg, #ff5b5a 0%, #004aad 100%)",  # Rosa para Azul
+                        "linear-gradient(135deg, #ffffff 0%, #fd5e21 100%)"   # Branco para Laranja
+                    ]
+                    
+                    # Seleciona o degradê baseado no índice do pet para criar variação visual
+                    # Usa o índice da lista pets_com_botao para manter consistência
+                    pet_index = pets_com_botao.index(item)
+                    gradient = degrades[pet_index % len(degrades)]
                     
                     # HTML do card do pet com novo layout
                     foto_url = pet.get('url_foto', 'https://via.placeholder.com/200x200?text=🐾')
@@ -503,13 +521,9 @@ for i in range(0, len(pets_com_botao), 3):
                             else:
                                 st.error("Erro ao excluir pet!")
 
-if not pets:
-    st.markdown("---")
-    st.info("🐾 Clique no botão acima para cadastrar seu primeiro pet! 🎉")
-
 # ============================================================================
 # INFORMAÇÕES ÚTEIS
 # ============================================================================
 
 st.markdown("---")
-st.info("🎯 **Capriche nas informações! Quanto mais detalhes você fornecer, melhor Dr. Tobias poderá ajudar seu pet!** 🐾")
+st.info("🎯Capriche nas informações! Quanto mais **detalhes** você fornecer, melhor o nosso **assistente** poderá ajudar seu pet! 🐾")

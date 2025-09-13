@@ -4,7 +4,7 @@ from paginas.funcoes import (
     obter_pets, 
     excluir_pet, 
     registrar_acao_usuario,
-    gerar_relatorio_pet_pdf,
+    gerar_relatorio_pet_html,
     fazer_upload_exame_pet,
     salvar_exame_pet,
     obter_exames_pet,
@@ -26,6 +26,37 @@ with coluna_logo:
 with coluna_titulo:
     st.title("Pelunos")
     st.markdown("*Bem-vindo ao Pelunos! Aqui você pode acompanhar seus pets e acessar todas as funcionalidades.*")
+
+# CSS global para padronizar tamanhos dos botões
+st.markdown("""
+<style>
+/* Garante que todos os botões tenham o mesmo tamanho */
+.stButton > button {
+    height: 40px !important;
+    min-height: 40px !important;
+    max-height: 40px !important;
+    font-size: 14px !important;
+    line-height: 1.2 !important;
+    padding: 8px 16px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+/* Ajusta o tamanho das colunas para distribuição igual */
+[data-testid="column"] {
+    width: 33.33% !important;
+    flex: 1 1 33.33% !important;
+}
+
+/* Garante que os botões dos pets tenham tamanhos consistentes */
+.pet-actions .stButton > button {
+    height: 40px !important;
+    min-height: 40px !important;
+    max-height: 40px !important;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # ============================================================================
 # DIÁLOGO PARA ADICIONAR EXAME
@@ -104,6 +135,7 @@ def dialog_registrar_acontecimento(pet_id, pet_nome):
             data_acontecimento = st.date_input(
                 "Data do Acontecimento *",
                 value=None,
+                min_value=date(1980, 1, 1),
                 max_value=date.today(),
                 format="DD/MM/YYYY"
             )
@@ -178,8 +210,10 @@ def dialog_registrar_acontecimento(pet_id, pet_nome):
 # DIÁLOGO PARA ADICIONAR MOTIVO DA CONSULTA
 # ============================================================================
 @st.dialog("🩺 Motivo da Consulta", width = "stretch")
-def dialog_motivo_consulta(pet):
+def dialog_motivo_consulta(pet, formato="html"):
     st.markdown(f"### Adicione o principal motivo da consulta para {pet['nome']}")
+    
+    st.info("📋 Gerando relatório veterinário para download")
 
     with st.form("motivo_da_consulta"):
         motivo = st.text_area(
@@ -190,12 +224,13 @@ def dialog_motivo_consulta(pet):
         )
 
         submitted = st.form_submit_button(
-            "📄 Gerar Relatório",
+            "📋 Gerar Relatório",
             use_container_width=True,
             type="primary"
         )
         
         condicao = False
+        html_content = None
 
         if submitted:
             # Validação para garantir que o campo não está vazio
@@ -203,18 +238,20 @@ def dialog_motivo_consulta(pet):
                 st.error("Por favor, preencha o motivo da consulta antes de gerar o relatório.")
             else:
                 with st.spinner("Gerando o relatório, por favor aguarde..."):
-                    data = gerar_relatorio_pet_pdf(pet, motivo_consulta=motivo)
+                    html_content = gerar_relatorio_pet_html(pet, motivo_consulta=motivo)
                     st.success("✅ Relatório gerado com sucesso! Clique abaixo para baixar.")
                     condicao = True
     
-    if condicao==True:
+    if condicao:
+        # Botão para download do relatório
         st.download_button(
-                        label= "🗂️ Baixar relatório agora", data = data,
-                        file_name= f"relatorio_completo_{pet['nome']}.pdf",
-                        mime = "application/pdf",
-                        use_container_width=True,
-                        type="primary"
-                    )
+            label="💾 Baixar relatório",
+            data=html_content,
+            file_name=f"relatorio_{pet['nome']}.html",
+            mime="text/html",
+            use_container_width=True,
+            type="primary"
+        )
 
 
 
@@ -413,7 +450,7 @@ if len(pets) > 0:
                         else:
                             st.markdown("Nenhum acontecimento registrado ainda.")
                     
-                    # Botões de ação divididos em 3 colunas
+                    # Botões de ação divididos em 3 colunas com tamanhos iguais
                     col_btn1, col_btn2, col_btn3 = st.columns(3)
                     
                     with col_btn1:
@@ -422,28 +459,16 @@ if len(pets) > 0:
                         num_exames = len(exames_pet)
                         
                         if num_exames > 0:
-                            help_text = f"Baixar relatório completo + {num_exames} exame(s) anexado(s)"
-                            label_texto = f"📄 Relatório + {num_exames} Exames"
+                            help_text = f"Baixar relatório completo + {num_exames} exame(s) listado(s)"
+                            label_texto = "📋 Gerar Relatório + Exames"
                         else:
-                            help_text = "Baixar relatório veterinário"
-                            label_texto = "📄 Gerar Relatório"
+                            help_text = "Baixar relatório veterinário completo"
+                            label_texto = "📋 Gerar Relatório"
 
-                        chave_unica = f"btn_gerar_relatorio_{pet['nome']}"
-                        # Caixa de diálogo para baixar 
-                        if st.button(label = label_texto, key=chave_unica, help = help_text, use_container_width=True,
+                        chave_unica_html = f"btn_gerar_relatorio_html_{pet['nome']}"
+                        if st.button(label = label_texto, key=chave_unica_html, help = help_text, use_container_width=True,
                             type = "primary"):
                             dialog_motivo_consulta(pet)
-
-                        # # Botão de download direto
-                        # st.download_button(
-                        #     label=label_texto,
-                        #     data=gerar_relatorio_pet_pdf(pet, motivo_consulta = motivo),
-                        #     file_name=f"relatorio_completo_{pet['nome']}.pdf",
-                        #     mime="application/pdf",
-                        #     help=help_text,
-                        #     use_container_width=True,
-                        #     type="primary"
-                        # )
                     
                     with col_btn2:
                         # Botão de adicionar exame
@@ -466,17 +491,17 @@ if len(pets) > 0:
                             type="secondary"
                         ):
                             dialog_registrar_acontecimento(pet['id'], pet['nome'])
+                    
+
 else:
     # Mensagem quando não há pets cadastrados
     st.info("🐾 **Você ainda não cadastrou nenhum pet!**")
     
-    with st.status("Siga os passos para começar!", expanded=True):
-        st.markdown("""
-        1.  Clique em **'Cadastro de Pets'** no menu lateral
-        2.  Preencha as informações do seu bichinho
-        3.  Volte aqui para ver todos os seus pets!
-        4.  Converse com Dr. Tobias sobre seus pets!
-        """)
+    # Botão de ação direta
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        if st.button("🚀 Cadastrar Meu Pet", type="primary", use_container_width=True):
+            st.switch_page("paginas/pets.py")
 
 # ============================================================================
 # RESUMO E AÇÕES RÁPIDAS
@@ -493,7 +518,7 @@ if len(pets) > 0:
             st.switch_page("paginas/pets.py")
     
     with col2:
-        if st.button("💬 Conversar com o Assistente", type="secondary", use_container_width=True):
+        if st.button("🩺 Conversar com Dr. Peluno", type="secondary", use_container_width=True):
             st.switch_page("paginas/chatbot.py")
     
     with col3:
@@ -501,28 +526,9 @@ if len(pets) > 0:
             st.switch_page("paginas/perfil.py")
 
 # ============================================================================
-# INFORMAÇÕES SOBRE DR. TOBIAS
+# INFORMAÇÕES SOBRE DR. PELUNO
 # ============================================================================
 
-with st.expander("💡 Saiba mais sobre o Assistente Virtual"):
-    col_info1, col_info2 = st.columns(2)
-
-    with col_info1:
-        st.markdown("**🤖 Assistente Inteligente:**")
-        st.markdown("• Especialista em cuidados com pets")
-        st.markdown("• Conhecimento sobre diferentes espécies")
-        st.markdown("• Conselhos personalizados baseados no seu pet")
-        st.markdown("• Disponível 24/7 para tirar suas dúvidas")
-
-    with col_info2:
-        st.markdown("**💡 Como usar:**")
-        st.markdown("• Cadastre todos os seus pets com detalhes")
-        st.markdown("• Acesse o chat e mencione o nome do seu pet")
-        st.markdown("• Faça perguntas específicas sobre comportamento, saúde, alimentação")
-        st.markdown("• Receba orientações profissionais personalizadas")
-
-
-    st.info("🎯 **Dica:** Quanto mais informações você fornecer sobre seus pets, mais preciso nosso assistente virtual será em suas recomendações! 🐾")
-
+# Seção simplificada - expander removido
 
 

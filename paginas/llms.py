@@ -19,7 +19,7 @@ def _get_openai_client():
 
 def gerar_titulo_chat(mensagens):
     """
-    Gera um título para um chat baseado nas mensagens.
+    Gera um título profissional e objetivo para um chat baseado nas mensagens.
     
     Args:
         mensagens: Lista de mensagens do chat
@@ -33,27 +33,51 @@ def gerar_titulo_chat(mensagens):
         
     # Pega as primeiras mensagens para gerar o título
     conteudo_chat = ""
-    for msg in mensagens[:3]:  # Apenas as 3 primeiras mensagens
+    for msg in mensagens[:4]:  # Aumenta para 4 mensagens para melhor contexto
         if msg["role"] == "user":
             conteudo_chat += f"Usuário: {msg['content']}\n"
         elif msg["role"] == "assistant":
-            conteudo_chat += f"Assistente: {msg['content']}\n"
+            conteudo_chat += f"Dr. Peluno: {msg['content']}\n"
     
-    prompt = f"""De maneira engraçadinha e baseado nesta conversa inicial, crie um título curto e descritivo (máximo 50 caracteres) para esta conversa sobre pets com Dr. Tobias:
+    prompt = f"""Analise esta conversa inicial e crie um título PROFISSIONAL, OBJETIVO e DESCRITIVO para a consulta veterinária.
 
+REGRAS IMPORTANTES:
+- Título deve ter entre 30-60 caracteres
+- Use linguagem médica/veterinária apropriada
+- Seja específico sobre o problema ou tema principal
+- Evite linguagem casual ou engraçada
+- Use formato: "Tema Principal - Pet/Nome" quando possível
+- Exemplos de títulos bons:
+  * "Consulta Comportamental - Cão Rex"
+  * "Avaliação Nutricional - Gato Luna"
+  * "Sintomas Respiratórios - Pet Toby"
+  * "Prevenção Vacinal - Filhotes"
+
+CONVERSA:
 {conteudo_chat}
 
-Responda apenas com o título, sem explicações."""
+Responda APENAS com o título, sem aspas ou explicações."""
 
     try:
         completion = client.chat.completions.create(
             model=MODELO_PADRAO,
             messages=[{"role": "user", "content": prompt}],
-            max_tokens=50,
-            temperature=0.7
+            max_tokens=80,
+            temperature=0.3  # Reduzido para mais consistência
         )
         titulo = completion.choices[0].message.content.strip()
-        return titulo[:50]  # Garante máximo de 50 caracteres
+        
+        # Limpa o título de caracteres especiais e aspas
+        titulo = titulo.replace('"', '').replace("'", "").strip()
+        
+        # Garante tamanho adequado
+        if len(titulo) > 60:
+            titulo = titulo[:57] + "..."
+        elif len(titulo) < 20:
+            titulo = titulo + " - Consulta Veterinária"
+            
+        return titulo
+        
     except Exception as e:
         print(f"Erro ao gerar título do chat: {e}")
         return None 

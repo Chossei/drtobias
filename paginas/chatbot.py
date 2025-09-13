@@ -18,7 +18,7 @@ from datetime import datetime
 
 # Verifica se o usuário está logado
 if not hasattr(st.user, 'is_logged_in') or not st.user.is_logged_in:
-    st.warning("Você precisa fazer login para conversar com Dr. Tobias.")
+    st.warning("Você precisa fazer login para conversar com Dr. Peluno.")
     st.stop()
 
 # Realiza o login do usuário (atualiza último acesso)
@@ -26,7 +26,7 @@ login_usuario()
 
 # Registra a ação de login apenas na primeira vez que a página é carregada na sessão
 if 'login_registrado' not in st.session_state:
-    registrar_acao_usuario("Login", "Chat Dr. Tobias")
+    registrar_acao_usuario("Login", "Chat Dr. Peluno")
     st.session_state['login_registrado'] = True
 
 # Obtém o perfil e define o nome do usuário ANTES de usar no popover
@@ -44,8 +44,8 @@ if nome_usuario and ' ' in nome_usuario:
 # Verifica e exibe a mensagem de boas-vindas no primeiro login
 if st.session_state.get('show_welcome_message', False):
     with st.popover("Bem-vindo! 🐾", use_container_width=True):
-        st.markdown(f"Olá, **{nome_usuario}**! Sou seu assistente veterinário virtual!")
-        st.markdown("Estou aqui para te ajudar com questões sobre pets, comportamento animal e cuidados básicos. Pode me contar tudo sobre seus bichinhos! 🐾")
+        st.markdown(f"Olá, **{nome_usuario}**! Sou o Dr. Peluno, seu especialista veterinário virtual!")
+        st.markdown("Como conheço todos os detalhes dos seus pets, posso te dar conselhos personalizados e precisos sobre comportamento, saúde e cuidados! 🐾")
         st.button("Vamos conversar!", use_container_width=True, key="welcome_close")
     # Remove o flag para não mostrar novamente
     del st.session_state['show_welcome_message']
@@ -63,21 +63,21 @@ def obter_avatar_usuario():
     else:
         return 'arquivos/avatar_usuario.jpg'
 
-# Mensagem inicial personalizada do Dr. Tobias
+# Mensagem inicial personalizada do Dr. Peluno
 def obter_mensagem_inicial():
     """Gera mensagem inicial personalizada com base no perfil do usuário"""
     mensagens_iniciais = [
-        f"Oi {nome_usuario}! 🐾 Sou seu assistente veterinário. Como estão seus pets hoje?",
-        f"Olá {nome_usuario}! ✨ Que bom te ver aqui! Em que posso ajudar você e seus bichinhos?",
-        f"Oi {nome_usuario}! 🐕  Estou aqui para ajudar. Me conta sobre seus pets!",
-        f"Olá {nome_usuario}! 🐱 Seu assistente veterinário está aqui! Quer conversar sobre comportamento, saúde ou cuidados com pets?"
+        f"Oi {nome_usuario}! 🐾 Sou o Dr. Peluno, seu especialista veterinário. Como estão seus pets hoje?",
+        f"Olá {nome_usuario}! ✨ Que bom te ver aqui! Como especialista dos seus pets, em que posso ajudar?",
+        f"Oi {nome_usuario}! 🐕 Dr. Peluno na área! Me conta sobre seus bichinhos!",
+        f"Olá {nome_usuario}! 🐱 Dr. Peluno aqui! Quer conversar sobre comportamento, saúde ou cuidados com seus pets?"
     ]
     import random
     return random.choice(mensagens_iniciais)
 
 # Define os avatars
 avatar_user = obter_avatar_usuario()
-avatar_assistant = 'arquivos/avatar_assistente.png'
+avatar_assistant = 'arquivos/peluno.png'
 
 MENSAGEM_INICIAL = obter_mensagem_inicial()
 
@@ -86,10 +86,10 @@ pets = obter_pets()
 contexto_exames = obter_info_exames(pets)
 
 def obter_system_prompt(perfil):
-    """Gera o system prompt personalizado para Dr. Tobias"""
+    """Gera o system prompt personalizado para Dr. Peluno"""
     return f"""
 
-**PERSONA:** Você é um assistente veterinário virtual caloroso, experiente e dedicado. Profissional competente, bem-humorado e acolhedor. Fala em português-BR, frases curtas, **negrito** para destaques e máx. *dois emojis* por mensagem.
+**PERSONA:** Você é o Dr. Peluno, um especialista veterinário virtual caloroso, experiente e dedicado. Profissional competente, bem-humorado e acolhedor. Fala em português-BR, frases curtas, **negrito** para destaques e máx. *dois emojis* por mensagem.
 
 INFORMAÇÕES DO USUÁRIO:
 - Nome: {perfil.get('nome_completo', 'Não informado')}
@@ -106,7 +106,7 @@ INFORMAÇÕES DOS EXAMES DE CADA PET:
 
 ## 2. Missão
 
-Durante uma conversa **natural e acolhedora**, ajude o usuário com questões sobre pets, descobrindo discretamente informações importantes para dar o melhor conselho. Seja um assistente veterinário dedicado e empático.
+Durante uma conversa **natural e acolhedora**, ajude o usuário com questões sobre pets, descobrindo discretamente informações importantes para dar o melhor conselho. Seja o Dr. Peluno, um especialista veterinário dedicado e empático.
 
 ### Cinco áreas principais de atuação
 
@@ -140,14 +140,14 @@ Durante uma conversa **natural e acolhedora**, ajude o usuário com questões so
 * Nunca diagnosticar doenças ou prescrever medicamentos específicos.
 * **SEMPRE** orientar a buscar veterinário presencial para emergências.
 * Evitar dar conselhos que possam colocar o animal em risco.
-* Não alegar ser um veterinário real; deixar claro que é um assistente IA.
+* Não alegar ser um veterinário real; deixar claro que é o Dr. Peluno, um especialista IA.
 * Respeitar imediatamente se o usuário disser **parar**.
 
 ---
 
 ### 🐾 Resumo Operacional
 
-Seja um assistente veterinário virtual dedicado e empático. Ajude com **orientações gerais, comportamento, cuidados básicos e prevenção**. Sempre priorize o bem-estar animal e oriente para cuidados profissionais quando necessário. 
+Seja o Dr. Peluno, um especialista veterinário virtual dedicado e empático. Ajude com **orientações gerais, comportamento, cuidados básicos e prevenção**. Sempre priorize o bem-estar animal e oriente para cuidados profissionais quando necessário. 
 """
 
 # Inicialização do histórico de mensagens e chat ativo
@@ -165,9 +165,43 @@ if 'chat_ativo_id' not in st.session_state:
 if 'chat_ativo_nome' not in st.session_state:
     st.session_state.chat_ativo_nome = "Nova Conversa"
 
-# Título da página
-st.title("🐾 Especialista em Pets")
-st.markdown("*Seu assistente veterinário virtual está aqui para ajudar você e seus bichinhos! 🐾*")
+# Cabeçalho com apresentação do Dr. Peluno
+st.markdown("""
+<style>
+.dr-peluno-header {
+    padding: 20px 0;
+    margin-bottom: 30px;
+}
+
+.dr-peluno-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #004aad;
+}
+
+.dr-peluno-subtitle {
+    font-size: 16px;
+    color: #333;
+    line-height: 1.6;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# Cabeçalho principal
+col_foto, col_info = st.columns([1, 3])
+
+with col_foto:
+    st.image('arquivos/peluno.png', width=80, use_container_width=True)
+
+with col_info: 
+    st.markdown('<div class="dr-peluno-title">🩺 Dr. Peluno</div>', unsafe_allow_html=True)
+    st.markdown('<div class="dr-peluno-subtitle">', unsafe_allow_html=True)
+    st.markdown("### **Seu Especialista Veterinário Virtual Personalizado** 🐾")
+    st.markdown("")
+    st.markdown("Como conheço **todos os detalhes** dos seus pets - desde histórico médico até preferências alimentares - posso te dar conselhos **precisos e personalizados** que nenhum outro assistente poderia oferecer!")
+    st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # Sidebar com histórico de chats
 with st.sidebar: 
@@ -183,7 +217,7 @@ with st.sidebar:
         ]
         st.session_state.chat_ativo_id = None
         st.session_state.chat_ativo_nome = "Nova Conversa"
-        registrar_acao_usuario("Nova Conversa", "Usuário iniciou nova conversa com Dr. Tobias")
+        registrar_acao_usuario("Nova Conversa", "Usuário iniciou nova conversa com Dr. Peluno")
         st.rerun()
     
     # Exibir chats existentes
@@ -232,7 +266,7 @@ for mensagem in st.session_state.mensagens:
         display_avatar = None
         
     with st.chat_message(role, avatar=display_avatar):
-        # Aplica as substituições para formato de matemática do Streamlit apenas nas mensagens do assistente
+        # Aplica as substituições para formato de matemática do Streamlit apenas nas mensagens do Dr. Peluno
         if role == "assistant":
             display_content = mensagem["content"].replace('\\[', '$$').replace('\\]', '$$')\
                                                .replace('\\(', '$').replace('\\)', '$')
@@ -246,8 +280,8 @@ prompt = st.chat_input(placeholder="Me conta sobre seus pets... 🐾")
 if prompt:
     # Registra a pergunta do usuário
     registrar_atividade_academica(
-        tipo="chatbot_dr_tobias",
-        modulo="Assistente Veterinário",
+        tipo="chatbot_dr_peluno",
+        modulo="Dr. Peluno - Especialista Veterinário",
         detalhes={
             "acao": "pergunta",
             "tamanho_pergunta": len(prompt),
@@ -266,10 +300,10 @@ if prompt:
     with st.chat_message("user", avatar=avatar_user):
         st.write(prompt)
 
-    # Processa resposta do assistente
+    # Processa resposta do Dr. Peluno
     with st.chat_message("assistant", avatar=avatar_assistant):
         try:
-            # Prepara o sistema prompt personalizado para Dr. Tobias
+            # Prepara o sistema prompt personalizado para Dr. Peluno
             system_prompt = obter_system_prompt(perfil)
 
             # Prepara mensagens para a API
@@ -335,8 +369,8 @@ if prompt:
             
             # Registra a resposta
             registrar_atividade_academica(
-                tipo="chatbot_dr_tobias",
-                modulo="Assistente Veterinário",
+                        tipo="chatbot_dr_peluno",
+        modulo="Dr. Peluno - Especialista Veterinário",
                 detalhes={
                     "acao": "resposta",
                     "tamanho_resposta": len(resposta_completa),
@@ -349,13 +383,4 @@ if prompt:
             st.error(f"Ops! Tive um probleminha técnico: {str(e)}")
             st.error("Tenta novamente, por favor! 🐾")
 
-# Informações úteis na sidebar
-with st.sidebar:
-    st.markdown("---")
-    st.markdown("### 💡 **Dicas para nossa conversa:**")
-    st.markdown("• Seja claro(a) sobre os sintomas")
-    st.markdown("• Descreva bem o comportamento do seu pet")
-    st.markdown("• Lembre-se: sou um assistente IA, não veterinário")
-    st.markdown("• Para emergências, procure um veterinário imediatamente")
-    st.markdown("---")
-    st.markdown("🐾 *O assistente está aqui para ajudar você e seus pets!*")
+
