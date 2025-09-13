@@ -31,12 +31,6 @@ if not hasattr(st.user, 'is_logged_in') or not st.user.is_logged_in:
         
         st.markdown(tagline_html, unsafe_allow_html = True)
 
-        msg_login = """
-        <p style='text-align: center;'>
-        Faça login com sua conta Google para conversar com seu veterinário especialista em pets.
-        </p>
-        """
-        st.markdown(msg_login, unsafe_allow_html=True)
         # Botão de login
         if st.button("Login com Google", type="primary", use_container_width=True, icon=':material/login:'):
             # Registra o usuário no Firestore se for o primeiro acesso (login_usuario faz isso)
@@ -143,10 +137,10 @@ else:
         paginas = {
             "Pelunos": [
                 st.Page("paginas/inicial.py", title="Central de Informações", icon='🏠', default=True),
-                st.Page("paginas/chatbot.py", title="Conversar", icon='💬'),
-                st.Page("paginas/pets.py", title="Cadastro Pet", icon='🐾'), 
+                st.Page("paginas/chatbot.py", title="Dr. Peluno", icon='🩺'),
+                st.Page("paginas/pets.py", title="Meus Pets", icon='🐾'), 
             ],
-            "Minha Conta": [ 
+            "Configurações": [ 
                 st.Page("paginas/perfil.py", title="Meu Perfil", icon='👤'), 
                 st.Page("paginas/termos.py", title="Termos e Privacidade", icon='📜'), 
             ]
@@ -170,4 +164,3 @@ else:
         st.error("⚠️ Ops! Não consegui carregar seu perfil. Tenta fazer login novamente?")
         if st.button("Tentar novamente", type="primary"):
             st.rerun()
- 
